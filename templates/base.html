@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{{ profile.name }} — {{ profile.role }}{% endblock title %}</title>
+  <title>{% block title %}{{ profile.name }} — {{ profile.role_short }}{% endblock title %}</title>
   <meta name="description" content="{% block description %}{{ config.description }}{% endblock description %}">
   <link rel="stylesheet" href="{{ get_url(path='style.css') | safe }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +20,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="{{ profile.name }}">
   <meta property="og:url" content="{{ page_url | safe }}">
-  {%- if page.title -%}{% set social_title = page.title ~ " — " ~ profile.name %}{%- else -%}{% set social_title = profile.name ~ " — " ~ profile.role %}{%- endif -%}
+  {%- if page.title -%}{% set social_title = page.title ~ " — " ~ profile.name %}{%- else -%}{% set social_title = profile.name ~ " — " ~ profile.role_short %}{%- endif -%}
   <meta property="og:title" content="{{ social_title }}">
   <meta property="og:description" content="{{ page.description | default(value=config.description) }}">
   <meta property="og:image" content="{{ get_url(path='og.png') | safe }}">

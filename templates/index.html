@@ -6,7 +6,7 @@
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "{{ p.name | safe }}",
-  "jobTitle": "{{ p.role | safe }}",
+  "jobTitle": ["Systems & Network Administrator", "Infrastructure & Security Engineer"],
   "description": "{{ p.summary | safe }}",
   "email": "mailto:{{ p.email | safe }}",
   "url": "{{ config.base_url | safe }}",

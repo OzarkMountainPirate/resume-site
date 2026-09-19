@@ -6,7 +6,11 @@
 # Anything beyond that is out of scope for this file.
 
 name       = "Carl Alcott"
-role       = "Infrastructure & Security Engineer"
+# Both halves of the picture: two decades of the first, building toward
+# the second. The short form is for <title> and link previews, where
+# the long one would be truncated.
+role       = "Systems & Network Administrator · Infrastructure & Security Engineer"
+role_short = "Systems & Network Administrator"
 tagline    = "Systems, networks, and security operations."
 summary    = "Building and operating network, systems, and security infrastructure since 2005, across managed-services and K-12 environments."
 location   = "Lake of the Ozarks, MO"

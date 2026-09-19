@@ -3,13 +3,40 @@
 One-time provisioning for `resume.alcott.dev`. Steps marked **(dashboard)**
 happen in Cloudflare and can't be scripted from here.
 
-## 1. Document root and deploy user
+## 1. Dataset, document root, and deploy user
+
+Every container on styx gets its own ZFS dataset — never a plain directory
+inside `tank/containers`. That keeps the teardown path to `compose down -v`
+plus one `zfs destroy`, and lets snapshot policy be set per workload.
 
 ```bash
-sudo install -d -m 755 /opt/containers/resume
+sudo zfs create -o recordsize=16K -o quota=1G tank/containers/resume
 sudo install -d -m 755 /opt/containers/resume/site
+```
 
-# Unprivileged, no password, no login shell beyond what rsync needs.
+**Why these properties**, evaluated against what this dataset actually holds:
+
+| property | value | reasoning |
+|---|---|---|
+| `recordsize` | `16K` | The webroot is many small files — HTML pages around 8–20K, CSS ~6K, SVG under 1K. Nothing benefits from the 128K default, and it matches the small-record convention already used for bookstack, crowdsec, and joplin. |
+| `quota` | `1G` | Hygiene. The content is ~200K; a quota three orders of magnitude above that still catches a runaway deploy before it touches the pool. |
+| `compression` | inherited `lz4` | The content is entirely text — HTML, CSS, SVG, XML. Compresses well and the parent already sets it. |
+| `atime` | inherited `off` | nginx reads every file on every request. Writing access times for that is pure waste. |
+| `sync` | default `standard` | Left alone. `rsync` does not fsync per file by default, so `sync=disabled` would buy little here and is not worth the durability tradeoff. |
+
+**Exclude it from Sanoid.** The webroot is derived data — every byte is
+reproducible from git by one CI run — so snapshotting it 36 times a day
+retains nothing of value. This matches the existing treatment of
+`elastic/esdata` and `pihole-ftl`. Add to `/etc/sanoid/sanoid.conf`:
+
+```ini
+[tank/containers/resume]
+	use_template = exclude
+```
+
+Then the deploy user — unprivileged, no password:
+
+```bash
 sudo useradd --system --create-home --shell /bin/bash deploy
 sudo chown -R deploy:deploy /opt/containers/resume/site
 ```
@@ -86,6 +113,13 @@ the hostname.
 cd /opt/containers/resume
 docker compose up -d
 docker compose logs -f resume
+```
+
+Teardown, if it ever comes to that, is two commands and leaves nothing behind:
+
+```bash
+docker compose down -v
+sudo zfs destroy tank/containers/resume
 ```
 
 Traefik picks the router up from the container labels. TLS comes from the

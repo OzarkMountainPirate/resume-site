@@ -67,7 +67,7 @@ declare -A CLASS=(
   ["a postal address"]='[0-9]+ +[A-Z][a-z]+ +(St|Street|Ave|Avenue|Rd|Road|Ln|Lane|Dr|Drive|Ct|Court)\b'
   ["a city-state-ZIP"]='[A-Za-z]+, *[A-Z]{2} *[0-9]{5}'
   ["compensation detail"]='(salary|compensation|pay range|[$][0-9]{2,3},?[0-9]{3})'
-  ["an internal profile field"]='(_internal|_note\b|verification_note)'
+  ["an internal annotation"]='(_note\b|_internal\b|verification_)'
 )
 for NAME in "${!CLASS[@]}"; do
   HITS=$(grep -rIlE -- "${CLASS[$NAME]}" public/ 2>/dev/null | tr '\n' ' ')

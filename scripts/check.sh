@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 # ── Pre-push checks — run before every commit ─────────────────────
-# Adapted from the loz-web house pattern, plus a content gate that
-# validates the rendered output before it can be published.
+# Validates the rendered output rather than the inputs: structure,
+# internal links, and content constraints are asserted against the
+# built site instead of assumed from the templates.
+#
+# The content gate matches classes of value rather than literals, so
+# this file never has to name the things it excludes — and so it
+# catches any phone number or postal address, not one known set.
+# Extra project-specific literals can be supplied out of band via
+# scripts/denylist.local (untracked, one string per line).
 set -uo pipefail
 cd "$(dirname "$0")/.."
 FAIL=0
@@ -49,22 +56,64 @@ say "Zola"
 zola check >/dev/null 2>&1 && ok "zola check" || { bad "zola check"; zola check 2>&1 | grep -iE 'error|warn' | head -5 | sed 's/^/         /'; }
 zola build >/dev/null 2>&1 && ok "zola build" || { bad "zola build"; zola build 2>&1 | tail -5 | sed 's/^/         /'; }
 
-say "Private data must not reach the build"
-PRIVATE=( '000-000-0000' '(000) 000-0000' '0000000000' '00000' 'Example Town'
-          'compensation' 'internal-note'
-          'old-address' 'cfsbgone' )
-for PAT in "${PRIVATE[@]}"; do
-  HITS=$(grep -ril -- "$PAT" public/ 2>/dev/null | tr '\n' ' ')
-  [ -n "$HITS" ] && bad "'$PAT' present in: $HITS" || ok "'$PAT' absent"
+say "Content gate"
+
+# Classes of value that must never appear in a published page. Matching
+# on shape rather than on literals keeps the patterns meaningful in a
+# public repository and catches cases nobody enumerated.
+declare -A CLASS=(
+  # Text pages only; the PDF is checked separately, as text and as bytes.
+  ["a phone number"]='\(?[0-9]{3}\)?[-. ][0-9]{3}[-. ][0-9]{4}'
+  ["a postal address"]='[0-9]+ +[A-Z][a-z]+ +(St|Street|Ave|Avenue|Rd|Road|Ln|Lane|Dr|Drive|Ct|Court)\b'
+  ["a city-state-ZIP"]='[A-Za-z]+, *[A-Z]{2} *[0-9]{5}'
+  ["compensation detail"]='(salary|compensation|pay range|[$][0-9]{2,3},?[0-9]{3})'
+  ["an internal profile field"]='(_internal|_note\b|verification_note)'
+)
+for NAME in "${!CLASS[@]}"; do
+  HITS=$(grep -rIlE -- "${CLASS[$NAME]}" public/ 2>/dev/null | tr '\n' ' ')
+  [ -n "$HITS" ] && bad "$NAME appears in: $HITS" || ok "no $NAME"
 done
 
-if [ -f public/carl-alcott-resume.pdf ] && command -v pdftotext >/dev/null; then
-  PDFTEXT=$(pdftotext public/carl-alcott-resume.pdf - 2>/dev/null)
-  for PAT in '000-0000' '00000' 'Example Town'; do
-    grep -q -- "$PAT" <<<"$PDFTEXT" && bad "résumé PDF still contains '$PAT'" || ok "PDF clean of '$PAT'"
-  done
+# Only this address may appear anywhere in the output.
+ALLOWED_EMAIL=$(grep -m1 '^email ' data/profile.toml | cut -d'"' -f2)
+STRAY=$(grep -rhoIE '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}' public/ 2>/dev/null \
+        | grep -vF "$ALLOWED_EMAIL" | sort -u | tr '\n' ' ')
+[ -n "$STRAY" ] && bad "unexpected address in output: $STRAY" || ok "only the published address appears"
+
+# Optional out-of-band literals, never committed.
+if [ -f scripts/denylist.local ]; then
+  while read -r LINE; do
+    [ -z "$LINE" ] && continue
+    case "$LINE" in \#*) continue ;; esac
+    grep -rqlIF -- "$LINE" public/ 2>/dev/null \
+      && bad "a denylisted value reached the build output" \
+      || ok "denylist entry absent"
+  done < scripts/denylist.local
 else
-  warn "résumé PDF not checked (missing file or pdftotext)"
+  warn "scripts/denylist.local absent — class checks only"
+fi
+
+# The published PDF is checked as bytes, not just as extracted text:
+# hyperlink targets and metadata live outside the visible text layer.
+if [ -f public/carl-alcott-resume.pdf ]; then
+  for NAME in "a phone number" "a city-state-ZIP"; do
+    if command -v pdftotext >/dev/null && \
+       pdftotext public/carl-alcott-resume.pdf - 2>/dev/null | grep -qE -- "${CLASS[$NAME]}"; then
+      bad "PDF text contains $NAME"
+    else
+      ok "PDF free of $NAME"
+    fi
+  done
+  if [ -f scripts/denylist.local ]; then
+    while read -r LINE; do
+      [ -z "$LINE" ] && continue
+      case "$LINE" in \#*) continue ;; esac
+      grep -qaF -- "$LINE" public/carl-alcott-resume.pdf && bad "PDF bytes contain a denylisted value"
+    done < scripts/denylist.local
+    ok "PDF bytes checked against denylist"
+  fi
+else
+  warn "résumé PDF not present"
 fi
 
 say "Housekeeping"

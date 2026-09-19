@@ -1,10 +1,7 @@
 # ── Employment history ────────────────────────────────────────────
-# Mirrors the résumé, plus the 2005–06 contract role, which the résumé
-# currently omits. It is listed here so the twenty-year span adds up for
-# anyone checking the dates. The contracting firm's name is not recalled,
-# so the engagement carries the entry instead.
-#
-# Public employment history.
+# The full record, in reverse chronological order. The site renders
+# this at greater depth than the résumé PDF, which is necessarily
+# condensed to two pages.
 
 [[jobs]]
 employer = "Independent Infrastructure & Security Engineering"

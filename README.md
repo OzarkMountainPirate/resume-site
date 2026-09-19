@@ -54,22 +54,22 @@ zola serve            # preview at 127.0.0.1:1111
 ./scripts/check.sh    # before committing
 ```
 
-## Rules that exist for a reason
+## Conventions
 
-- **`public/` is gitignored.** Zola regenerates it on every build.
-- **Top-level keys in `data/*.toml` must sit above any `[[table]]` header.**
-  TOML assigns keys written after a table header *to that table*, so a
-  misplaced key parses cleanly and renders nothing. `check.sh` catches it.
+- **`public/` is generated.** Zola rebuilds it on every run; it is not tracked.
+- **Top-level keys in `data/*.toml` sit above any `[[table]]` header.** TOML
+  assigns keys written after a table header to that table, so a misplaced key
+  parses cleanly and renders nothing. `check.sh` verifies placement.
 - **The published PDF is generated, not committed by hand.**
   `scripts/make-resume-pdf.sh` derives it from a source document, so the
-  published copy is reproducible and the pipeline stays the single source
-  of truth.
+  published copy is reproducible and the pipeline stays the single source of
+  truth.
 - **`check.sh` validates the build output, not the inputs.** Structure,
-  internal links, and content constraints are asserted against the
-  rendered site rather than assumed from the templates. CI runs it
-  before the deploy step.
-- **Deploy triggers on `push` to `main` only.** This repository is public. A
-  `pull_request` trigger would hand fork branches a path to the deploy secrets.
+  internal links, and content constraints are all asserted against the
+  rendered site rather than assumed from the templates. CI runs it before the
+  deploy step.
+- **Deploy triggers on `push` to `main` only.** This repository is public; a
+  `pull_request` trigger would expose deployment credentials to forks.
 
 ## Licence
 

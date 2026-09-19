@@ -10,6 +10,11 @@ public/
 *~
 .DS_Store
 
+# Private redaction inputs — these hold the literal values the
+# published output must not contain, so they stay out of the repo.
+scripts/denylist.local
+scripts/redactions.conf
+
 # Secrets — nothing here should ever be committed
 *.pem
 *.key

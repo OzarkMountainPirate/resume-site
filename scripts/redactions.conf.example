@@ -1,0 +1,17 @@
+# ── Redaction rules for the published résumé PDF ──────────────────
+# Copy to scripts/redactions.conf and fill in. That file is ignored
+# by git: it holds the literal values, so it must never be committed.
+#
+# One rule per line.
+#   text   <find>|<replace>     literal substitution in the document
+#   drop   <find>               remove the run, and one bullet separator
+#   mailto <address>            repoint every mail hyperlink here
+#   deny   <string>             refuse to publish if it survives
+#
+# Lines beginning with # are ignored.
+
+text    Example Town, ST 00000|Region, ST
+drop    (000) 000-0000
+mailto  you@example.com
+deny    000-0000
+deny    00000

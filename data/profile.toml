@@ -3,6 +3,7 @@
 # swallowed by a table header.
 #
 # Contact detail here is limited to what belongs on a public page.
+# Anything beyond that is out of scope for this file.
 
 name       = "Carl Alcott"
 role       = "Infrastructure & Security Engineer"

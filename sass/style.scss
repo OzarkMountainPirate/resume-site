@@ -1,0 +1,136 @@
+/* ── Carl Alcott — slate and a single teal accent ──────────────────
+   Deliberately quiet. Typography does the work; the only ornament is
+   a hairline rule and a mono face for stack strings.                */
+
+$ink:     #16191D;   // headings
+$body-ink:#31383F;   // body copy
+$muted:   #5E6872;   // secondary text
+$rule:    #DEE3E7;   // hairlines
+$wash:    #F6F8F9;   // banded sections
+$white:   #FFFFFF;
+$teal:    #1C6F62;   // links and accents — the only colour that carries meaning
+$teal-d:  #14544A;
+
+$display: "IBM Plex Sans", system-ui, sans-serif;
+$mono:    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+$body:    system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  font-family: $body;
+  color: $body-ink;
+  background: $white;
+  line-height: 1.6;
+  font-size: 1.0625rem;
+}
+
+.wrap { max-width: 60rem; margin: 0 auto; padding: 0 1.25rem; }
+
+h1, h2, h3 { font-family: $display; color: $ink; line-height: 1.2; margin: 0 0 .5rem; }
+h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 600; letter-spacing: -.02em; }
+h2 { font-size: clamp(1.35rem, 3vw, 1.75rem); font-weight: 600; letter-spacing: -.01em; }
+h3 { font-size: 1.0625rem; font-weight: 600; }
+p  { margin: 0 0 1rem; }
+
+a { color: $teal; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { color: $teal-d; }
+a:focus-visible { outline: 3px solid $teal; outline-offset: 2px; border-radius: 2px; }
+
+.skip-link {
+  position: absolute; left: -9999px;
+  &:focus { left: 1rem; top: 1rem; z-index: 10; background: $ink; color: $white;
+            padding: .6rem 1rem; border-radius: .3rem; text-decoration: none; }
+}
+
+/* ── Header ─────────────────────────────────────────────────────── */
+.site-header { border-bottom: 1px solid $rule; background: $white; }
+.header-row { display: flex; align-items: center; justify-content: space-between;
+              gap: 1rem; flex-wrap: wrap; padding-top: 1rem; padding-bottom: 1rem; }
+.brand { font-family: $display; font-weight: 600; font-size: 1.0625rem;
+         color: $ink; text-decoration: none; letter-spacing: -.01em; }
+.brand:hover { color: $teal; }
+.site-nav { display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap; }
+.site-nav a { color: $muted; text-decoration: none; font-size: .95rem; }
+.site-nav a:hover { color: $teal; }
+.nav-resume { color: $teal !important; font-weight: 500; }
+
+main { min-height: 60vh; }
+
+/* ── Sections ───────────────────────────────────────────────────── */
+section { padding: 2.75rem 0; }
+.band { background: $wash; border-top: 1px solid $rule; border-bottom: 1px solid $rule; }
+.lede { color: $muted; max-width: 60ch; margin-bottom: 1.75rem; }
+.more { margin-top: 1.5rem; font-size: .95rem; }
+
+/* ── Hero ───────────────────────────────────────────────────────── */
+.hero { padding: 3.5rem 0 2.75rem; }
+.hero h1 { margin-bottom: .25rem; }
+.hero-role { font-family: $display; font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+             color: $teal; font-weight: 500; margin-bottom: 1rem; }
+.hero-summary { font-size: 1.125rem; max-width: 56ch; margin-bottom: 1.25rem; }
+.hero-meta { display: flex; gap: 1.25rem; flex-wrap: wrap; font-size: .95rem; color: $muted; }
+
+/* ── Projects + systems ─────────────────────────────────────────── */
+.project-list, .system-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.75rem; }
+/* Four projects read better as a 2x2 than as 3-plus-a-stray. */
+.project-list { grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr)); }
+/* Six systems fall naturally into two rows of three. */
+.system-list  { grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+.project h3, .system h3 { margin-bottom: .3rem; }
+.project-stack, .system-stack { font-family: $mono; font-size: .8rem; color: $muted;
+                                margin-bottom: .5rem; line-height: 1.5; }
+.project-blurb { font-size: .95rem; max-width: 52ch; margin: 0; }
+.system p     { font-size: .95rem; max-width: 46ch; margin: 0; }
+
+/* ── Career spine ───────────────────────────────────────────────── */
+.spine { list-style: none; margin: 0; padding: 0; }
+.spine li { display: grid; grid-template-columns: 7.5rem 1fr; gap: .25rem 1.25rem;
+            padding: .7rem 0; border-top: 1px solid $rule; align-items: baseline; }
+.spine li:last-child { border-bottom: 1px solid $rule; }
+.spine-years { font-family: $mono; font-size: .8rem; color: $muted; }
+.spine-role { font-weight: 600; color: $ink; }
+.spine-employer { grid-column: 2; color: $muted; font-size: .95rem; }
+
+/* ── Experience ─────────────────────────────────────────────────── */
+.jobs { list-style: none; margin: 0; padding: 0; }
+.job { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1.5rem;
+       padding: 1.75rem 0; border-top: 1px solid $rule; }
+.job-years { font-family: $mono; font-size: .8rem; color: $muted; margin: .3rem 0 0; }
+.job-body h2 { font-size: 1.15rem; }
+.job-employer { color: $teal; font-size: .95rem; margin-bottom: .75rem; }
+.job-summary { max-width: 64ch; }
+.job-note { color: $muted; font-size: .9rem; font-style: italic; max-width: 64ch; }
+.job-points { margin: .75rem 0 0; padding-left: 1.1rem; }
+.job-points li { margin-bottom: .45rem; max-width: 64ch; font-size: .95rem; }
+
+/* ── Skills + credentials ───────────────────────────────────────── */
+.skill-grid { display: grid; gap: 1.75rem;
+              grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.skill-group ul { list-style: none; margin: 0; padding: 0; }
+.skill-group li { font-size: .9rem; color: $body-ink; padding: .18rem 0; }
+.creds h2 { font-size: 1.15rem; margin-bottom: .75rem; }
+.creds { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.creds ul { list-style: none; margin: 0; padding: 0; }
+.creds li { font-size: .92rem; margin-bottom: .85rem; }
+.creds strong { color: $ink; font-weight: 600; }
+
+/* ── Ordinary pages ─────────────────────────────────────────────── */
+.page p, .page li { max-width: 64ch; }
+.page ul { padding-left: 1.1rem; }
+.page li { margin-bottom: .4rem; }
+
+/* ── Footer ─────────────────────────────────────────────────────── */
+.site-footer { border-top: 1px solid $rule; padding: 2rem 0; margin-top: 1rem; }
+.footer-row { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.footer-row p { margin: 0; font-size: .9rem; color: $muted; }
+.footer-row span { margin: 0 .5rem; color: $rule; }
+
+@media (max-width: 34rem) {
+  .job, .spine li { grid-template-columns: 1fr; gap: .35rem; }
+  .spine-employer { grid-column: 1; }
+  .job-years { margin-top: 0; }
+}

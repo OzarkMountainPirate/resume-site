@@ -1,0 +1,41 @@
+# ── resume.alcott.dev ─────────────────────────────────────────────
+# Static site container. Deploys to /opt/containers/resume on styx.
+#
+# The site itself is written into ./site by CI over an SSH tunnel
+# (see .github/workflows/deploy.yml). Nothing in this stack needs
+# write access to it — nginx mounts it read-only.
+
+services:
+  resume:
+    image: nginx:stable-alpine
+    container_name: resume
+    restart: unless-stopped
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ ALL ]
+    cap_add: [ CHOWN, SETUID, SETGID, DAC_OVERRIDE ]
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+    volumes:
+      - ./site:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks: [ proxy ]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.resume.rule=Host(`resume.alcott.dev`)"
+      - "traefik.http.routers.resume.entrypoints=websecure"
+      - "traefik.http.routers.resume.tls=true"
+      - "traefik.http.routers.resume.tls.certresolver=cloudflare"
+      - "traefik.http.routers.resume.tls.domains[0].main=alcott.dev"
+      - "traefik.http.routers.resume.tls.domains[0].sans=*.alcott.dev"
+      # crowdsec + rate-limit + secure-headers, defined in
+      # traefik/dynamic/security.yml
+      - "traefik.http.routers.resume.middlewares=security-chain@file"
+      - "traefik.http.services.resume.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy"
+
+networks:
+  proxy:
+    external: true

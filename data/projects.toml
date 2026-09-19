@@ -1,0 +1,27 @@
+# ── Public work ───────────────────────────────────────────────────
+# Each entry must point at a repo that is actually public and actually
+# current. Describe what the thing is; let the reader judge it.
+
+[[projects]]
+name  = "suricata-elk"
+url   = "https://github.com/OzarkMountainPirate/suricata-elk"
+stack = "Suricata · syslog-ng · Logstash · Elasticsearch · Kibana"
+blurb = "Ships pfSense/Suricata EVE logs into a self-hosted ELK stack over TCP, with GeoIP enrichment and a scoped, non-superuser ingest path. Documents a working deployment, including why the obvious UDP syslog path truncates long records and breaks JSON parsing."
+
+[[projects]]
+name  = "ark-fleet"
+url   = "https://github.com/OzarkMountainPirate/ark-fleet"
+stack = "Ansible · PXE / preseed · systemd · Debian"
+blurb = "Infrastructure as code that takes two bare-metal hosts from powered off to a running clustered workload: unattended OS install over PXE, configuration management in Ansible, lint CI on every push. The game servers are the workload; the pipeline is the subject."
+
+[[projects]]
+name  = "utilities"
+url   = "https://github.com/OzarkMountainPirate/utilities"
+stack = "Bash · Python · ZFS · Sanoid / Syncoid · Restic"
+blurb = "Linux administration and automation tooling, each piece self-contained with its own documentation. Includes a 3-2-1 backup stack — local ZFS snapshots, raw-encrypted replication to on-site storage, and client-encrypted offsite repositories on a schedule."
+
+[[projects]]
+name  = "resume-site"
+url   = "https://github.com/OzarkMountainPirate/resume-site"
+stack = "Zola · GitHub Actions · Traefik · Cloudflare Tunnel"
+blurb = "This site. A static build deployed by CI over an access-controlled tunnel to a host with no inbound ports, then served behind a reverse proxy and an intrusion-prevention bouncer. Source and pipeline are public."

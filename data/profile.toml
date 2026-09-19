@@ -1,0 +1,16 @@
+# ── Identity ──────────────────────────────────────────────────────
+# Scalars only. No [[tables]] in this file, so nothing can be
+# swallowed by a table header.
+#
+# Contact detail here is limited to what belongs on a public page.
+
+name       = "Carl Alcott"
+role       = "Infrastructure & Security Engineer"
+tagline    = "Systems, networks, and security operations."
+summary    = "Twenty years building and operating network, systems, and security infrastructure across managed-services and K-12 environments."
+location   = "Lake of the Ozarks, MO"
+email      = "carl@arcfob.space"
+email_href = "mailto:carl@arcfob.space"
+github     = "OzarkMountainPirate"
+github_url = "https://github.com/OzarkMountainPirate"
+resume_pdf = "carl-alcott-resume.pdf"

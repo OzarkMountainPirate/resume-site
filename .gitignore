@@ -1,0 +1,23 @@
+# ── Build output — never commit ──────────────────────────────────
+public/
+.zola-cache/
+
+# Editor / tooling
+.claude/
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+
+# Secrets — nothing here should ever be committed
+*.pem
+*.key
+id_*
+!*.pub
+.env
+.env.*
+
+# Local scratch
+*.log
+tmp/

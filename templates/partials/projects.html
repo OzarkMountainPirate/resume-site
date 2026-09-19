@@ -1,0 +1,10 @@
+{%- set catalog = load_data(path="data/projects.toml") -%}
+<ul class="project-list">
+  {% for p in catalog.projects -%}
+  <li class="project">
+    <h3><a href="{{ p.url }}">{{ p.name }}</a></h3>
+    <p class="project-stack">{{ p.stack }}</p>
+    <p class="project-blurb">{{ p.blurb }}</p>
+  </li>
+  {% endfor -%}
+</ul>

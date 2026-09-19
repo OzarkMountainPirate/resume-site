@@ -1,0 +1,31 @@
+# Build and validate on every push and PR. Never deploys.
+name: check
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  ZOLA_VERSION: "0.22.1"       # ← match your local `zola --version`
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Zola and poppler
+        run: |
+          curl -sSfL "https://github.com/getzola/zola/releases/download/v${ZOLA_VERSION}/zola-v${ZOLA_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
+            | sudo tar xz -C /usr/local/bin
+          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+          zola --version
+
+      - name: Run checks
+        run: ./scripts/check.sh

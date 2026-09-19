@@ -1,0 +1,11 @@
+{%- set lab = load_data(path="data/homelab.toml") -%}
+<p class="lede">{{ lab.intro }}</p>
+<ul class="system-list">
+  {% for s in lab.systems -%}
+  <li class="system">
+    <h3>{{ s.name }}</h3>
+    <p class="system-stack">{{ s.stack }}</p>
+    <p>{{ s.desc }}</p>
+  </li>
+  {% endfor -%}
+</ul>

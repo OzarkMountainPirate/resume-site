@@ -1,0 +1,14 @@
+# ── Main navigation ───────────────────────────────────────────────
+# Order here is render order.
+
+[[links]]
+label = "Experience"
+url   = "experience/"
+
+[[links]]
+label = "Projects"
+url   = "projects/"
+
+[[links]]
+label = "Contact"
+url   = "contact/"

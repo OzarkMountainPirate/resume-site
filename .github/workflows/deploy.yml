@@ -1,0 +1,98 @@
+# ── Deploy to styx ────────────────────────────────────────────────
+# styx has no inbound path from the internet. This job reaches it
+# through the existing Cloudflare Tunnel, authenticating to Cloudflare
+# Access with a service token before any traffic reaches sshd.
+#
+# SECRETS (Settings → Secrets and variables → Actions):
+#   CF_ACCESS_CLIENT_ID       <uuid>.access — service token ID
+#   CF_ACCESS_CLIENT_SECRET   service token secret
+#   STYX_SSH_HOST             ssh.alcott.dev
+#   STYX_SSH_USER             deploy
+#   STYX_SSH_KEY              private key for the deploy user
+#   STYX_DOCROOT              /opt/containers/resume/site
+#
+# The deploy key is restricted on the host side: its authorized_keys
+# entry pins it to `rrsync -wo <docroot>`, so it can write into the
+# document root and do nothing else.
+#
+# This repository is PUBLIC. The trigger is deliberately push-to-main
+# only — never pull_request, which on a public repo would let a fork
+# reach these secrets.
+
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  ZOLA_VERSION: "0.22.1"
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+# Master switch. Deploy stays OFF until repo variable DEPLOY_ENABLED
+# is set to 'true' (Settings → Secrets and variables → Actions →
+# Variables), so source can land before the site goes live.
+jobs:
+  deploy:
+    if: vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Zola and poppler
+        run: |
+          curl -sSfL "https://github.com/getzola/zola/releases/download/v${ZOLA_VERSION}/zola-v${ZOLA_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
+            | sudo tar xz -C /usr/local/bin
+          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+
+      # Same gate that runs locally: a build carrying private data
+      # must never reach the deploy step.
+      - name: Run checks
+        run: ./scripts/check.sh
+
+      - name: Install cloudflared
+        run: |
+          curl -sSfL -o cloudflared \
+            https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+          sudo install -m 755 cloudflared /usr/local/bin/cloudflared
+          cloudflared --version
+
+      - name: Set up SSH through Cloudflare Access
+        env:
+          KEY: ${{ secrets.STYX_SSH_KEY }}
+          HOST: ${{ secrets.STYX_SSH_HOST }}
+        run: |
+          install -d -m 700 ~/.ssh
+          install -m 600 /dev/null ~/.ssh/deploy_key
+          printf '%s\n' "$KEY" > ~/.ssh/deploy_key
+          cat > ~/.ssh/config <<EOF
+          Host styx-deploy
+            HostName $HOST
+            User ${{ secrets.STYX_SSH_USER }}
+            IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking accept-new
+            ProxyCommand cloudflared access ssh --hostname %h \
+              --service-token-id ${{ secrets.CF_ACCESS_CLIENT_ID }} \
+              --service-token-secret ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+          EOF
+          chmod 600 ~/.ssh/config
+
+      - name: Deploy
+        run: |
+          rsync -az --delete --itemize-changes \
+            -e "ssh -F $HOME/.ssh/config" \
+            public/ "styx-deploy:${{ secrets.STYX_DOCROOT }}/"
+
+      - name: Clean up key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key ~/.ssh/config

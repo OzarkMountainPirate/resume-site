@@ -1,0 +1,36 @@
+# ── Current infrastructure ────────────────────────────────────────
+# What is actually running, stated as fact. Every line here should be
+# verifiable against the hosts or the public repos — if something is
+# torn down, remove it from this file.
+
+intro = "A three-host Linux environment running production-grade detection, edge, and storage tooling. This site is served from it."
+
+[[systems]]
+name  = "Network detection"
+stack = "Suricata · syslog-ng · Logstash · Elasticsearch · Kibana"
+desc  = "IDS events from the gateway shipped over TCP into a self-hosted ELK stack, with GeoIP enrichment and a scoped non-superuser ingest path."
+
+[[systems]]
+name  = "Intrusion prevention"
+stack = "CrowdSec"
+desc  = "Behaviour-based blocking across the fleet, with a bouncer at each host's reverse proxy."
+
+[[systems]]
+name  = "Edge and remote access"
+stack = "Traefik · Cloudflare Tunnel · OpenVPN · sslh"
+desc  = "No inbound ports. Services are published outbound through a tunnel and terminated at a reverse proxy with automatic certificate management."
+
+[[systems]]
+name  = "Host hardening"
+stack = "nftables · fail2ban · auditd · LUKS"
+desc  = "Full-disk encryption, host firewalling, and audit logging as a baseline on every host."
+
+[[systems]]
+name  = "Storage and recovery"
+stack = "ZFS · Sanoid · Syncoid · Restic"
+desc  = "Scheduled snapshots, raw-encrypted replication to on-site storage, and client-encrypted offsite backup."
+
+[[systems]]
+name  = "Container platform"
+stack = "Docker · Compose"
+desc  = "Least-privilege containers throughout: a socket proxy in front of the Docker API and file-based secrets rather than environment variables."

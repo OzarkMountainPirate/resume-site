@@ -1,0 +1,86 @@
+# ── Employment history ────────────────────────────────────────────
+# Mirrors the résumé. The 2005–06 contract role is omitted here as it
+# is on the résumé; it is recorded separately.
+#
+# Public employment history.
+
+[[jobs]]
+employer = "Independent Infrastructure & Security Engineering"
+title    = "Self-Directed Research & Development"
+start    = "2025"
+end      = "Present"
+location = "Lake of the Ozarks, MO"
+summary  = "Design, build, and operate a multi-host Linux environment developing production-grade security and infrastructure tooling."
+highlights = [
+  "Built a detection pipeline carrying Suricata IDS events through syslog-ng and Logstash into Elasticsearch and Kibana, with GeoIP enrichment and custom dashboards.",
+  "Deployed CrowdSec intrusion prevention across a three-host fleet with per-host reverse-proxy bouncers.",
+  "Engineered a secure edge and remote-access stack using Cloudflare Tunnels, Traefik, sslh, and OpenVPN.",
+  "Hardened hosts with nftables, fail2ban, auditd, LUKS full-disk encryption, ZFS snapshots and replication, and least-privilege Docker.",
+  "Manage all configuration as version-controlled declarative infrastructure and publish selected tooling as open source.",
+]
+
+[[jobs]]
+employer = "KCHelpdesk"
+title    = "Chief Technology Officer / Senior Systems Engineer"
+start    = "2016"
+end      = "2025"
+location = "Independence, MO"
+summary  = "Senior technical lead and CTO for a managed services provider whose core client base was private schools and parishes, alongside commercial clients in healthcare, dental, veterinary, architecture, manufacturing, banking, and municipal government."
+highlights = [
+  "Designed, deployed, and administered campus area networks for K-12 environments — VLAN segmentation, inter-VLAN routing, enterprise wireless, and multi-vendor switching from server room to endpoint.",
+  "Deployed and managed multi-vendor firewalls and CIPA-compliance content filtering, from proxy-based platforms to DNS-based filtering.",
+  "Administered student information systems including PowerSchool and Infinite Campus, and managed Google Workspace for Education across one-to-one device fleets.",
+  "Deployed and integrated 3CX VoIP telephony, including intercom/paging, elevator, fire-alarm, and security-panel integrations.",
+  "Migrated clients to Microsoft 365 and Exchange Online; managed email security, spam filtering, and domain authentication.",
+  "Architected and maintained VMware ESXi / vCenter and Hyper-V environments; implemented on-prem and cloud backup and disaster recovery.",
+  "Administered Windows Server and Linux infrastructure; managed SAN/NAS storage with iSCSI, NFS, and SMB replication; automated with PowerShell and Bash.",
+  "Implemented security-operations tooling — EDR/MDR, SIEM, vulnerability scanning, and security awareness training — and delivered Tier 3 escalation support.",
+]
+
+[[jobs]]
+employer = "Wentworth Military Academy & College"
+title    = "Director of Technology / Network & Systems Administrator"
+start    = "2014"
+end      = "2016"
+location = "Lexington, MO"
+summary  = "Directed all campus technology for a residential military academy and college."
+note     = "The institution closed permanently in June 2017."
+highlights = [
+  "Engineered a high-density network for roughly 1,100 concurrent devices with heavy student BYOD, atop a managed fleet of about 500 endpoints.",
+  "Administered Windows Server infrastructure, Active Directory, Office 365, Blackbaud, Moodle, and a campus-wide Avaya VoIP system.",
+  "Led VMware-based virtualization projects and campus-wide infrastructure upgrades.",
+  "Oversaw backups, patch management, disaster recovery, and account security; trained staff and documented processes for continuity and audit readiness.",
+]
+
+[[jobs]]
+employer = "KCHelpdesk"
+title    = "Systems / Network Administrator"
+start    = "2011"
+end      = "2014"
+location = "Independence, MO"
+highlights = [
+  "Supported Active Directory, Group Policy, Exchange, and Hyper-V virtual machines across small and mid-sized business environments.",
+  "Assisted with server upgrades, patching, and client project deployment; managed DNS, DHCP, and networking.",
+]
+
+[[jobs]]
+employer = "Lexington Tech Solutions"
+title    = "System / Network Administrator & Shop Manager"
+start    = "2009"
+end      = "2011"
+location = "Lexington, MO"
+highlights = [
+  "Provided full-stack IT support across servers, networking, and client systems.",
+  "Managed customer repair operations and small-business IT contracts.",
+]
+
+[[jobs]]
+employer = "Kearney School District"
+title    = "Support / Helpdesk Technician"
+start    = "2006"
+end      = "2009"
+location = "Kearney, MO"
+highlights = [
+  "Delivered district-wide helpdesk and infrastructure support across multiple buildings — servers, desktops, printers, and classroom technology.",
+  "Assisted with district-wide system upgrades and end-user training.",
+]

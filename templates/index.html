@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+{%- set profile = load_data(path="data/profile.toml") -%}
+{%- set history = load_data(path="data/experience.toml") -%}
+
+<section class="hero">
+  <div class="wrap">
+    <h1>{{ profile.name }}</h1>
+    <p class="hero-role">{{ profile.role }}</p>
+    <p class="hero-summary">{{ profile.summary }}</p>
+    <p class="hero-meta">
+      <span>{{ profile.location }}</span>
+      <a href="{{ profile.email_href }}">{{ profile.email }}</a>
+      <a href="{{ profile.github_url }}">github.com/{{ profile.github }}</a>
+    </p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <h2>Current infrastructure</h2>
+    {% include "partials/homelab.html" %}
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Public work</h2>
+    {% include "partials/projects.html" %}
+    <p class="more"><a href="{{ get_url(path='projects/') }}">Project detail</a></p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <h2>Career</h2>
+    <ul class="spine">
+      {% for job in history.jobs -%}
+      <li>
+        <span class="spine-years">{{ job.start }}–{{ job.end }}</span>
+        <span class="spine-role">{{ job.title }}</span>
+        <span class="spine-employer">{{ job.employer }}</span>
+      </li>
+      {% endfor -%}
+    </ul>
+    <p class="more"><a href="{{ get_url(path='experience/') }}">Full history and skills</a></p>
+  </div>
+</section>
+{% endblock content %}

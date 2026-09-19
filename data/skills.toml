@@ -1,0 +1,102 @@
+# ── Competencies ──────────────────────────────────────────────────
+# Grouped, not ranked. Order is a presentation choice: automation sits
+# second rather than fifth so it isn't buried under the older work.
+
+[[groups]]
+name = "Security Operations"
+items = [
+  "SIEM — Elastic/ELK, AlienVault, Huntress",
+  "IDS/IPS — Suricata, CrowdSec",
+  "EDR/MDR",
+  "Vulnerability scanning — OpenVAS",
+  "Incident response and log analysis",
+  "Email security — SPF, DKIM, DMARC",
+  "Security awareness training",
+  "CIPA compliance",
+]
+
+[[groups]]
+name = "Automation & Infrastructure as Code"
+items = [
+  "Ansible",
+  "Terraform",
+  "Bash",
+  "PowerShell",
+  "Python",
+  "Git / Gitea",
+  "Declarative configuration management",
+  "CI pipelines — GitHub Actions",
+]
+
+[[groups]]
+name = "Systems Administration"
+items = [
+  "Linux — Debian, Ubuntu",
+  "Windows Server",
+  "Active Directory and Group Policy",
+  "Exchange / Exchange Online",
+  "Microsoft 365",
+  "Entra ID / Azure AD",
+  "Google Workspace for Education",
+]
+
+[[groups]]
+name = "Networking"
+items = [
+  "LAN/WAN and campus area networks",
+  "VLAN segmentation and inter-VLAN routing",
+  "Multi-vendor switching and firewalls",
+  "Enterprise wireless",
+  "VPN",
+  "TCP/IP, DNS, DHCP",
+]
+
+[[groups]]
+name = "Virtualization & Storage"
+items = [
+  "VMware ESXi / vCenter — vMotion, HA",
+  "Hyper-V",
+  "Docker",
+  "ZFS",
+  "SAN/NAS — iSCSI, NFS, SMB/CIFS",
+  "Backup and disaster recovery",
+]
+
+[[groups]]
+name = "Endpoint & Device Management"
+items = [
+  "JAMF / JAMF Pro",
+  "macOS, iOS, iPadOS",
+  "Chromebook and Google Admin console",
+  "One-to-one fleets of 200–300 devices per site",
+  "Imaging, enrollment, and deployment",
+]
+
+[[groups]]
+name = "Voice & Unified Communications"
+items = [
+  "3CX — Advanced Certified Engineer",
+  "Avaya",
+  "VoIP provisioning",
+  "Paging, intercom, and building-system integration",
+]
+
+[[groups]]
+name = "K-12 Systems"
+items = [
+  "PowerSchool",
+  "Infinite Campus",
+  "Content filtering — Lightspeed, GoGuardian, DansGuardian, SquidGuard",
+  "Classroom technology — interactive boards, projectors, document cameras",
+  "Testing platforms and classroom management software",
+]
+
+[[groups]]
+name = "Service Management"
+items = [
+  "Ticket intake, triage, and SLA assignment",
+  "Escalation paths and Tier 3 support",
+  "Service metrics and knowledge base authoring",
+  "Purchasing and vendor coordination",
+  "Asset lifecycle and inventory audits",
+]

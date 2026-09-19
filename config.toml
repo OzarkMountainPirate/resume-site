@@ -1,0 +1,12 @@
+# Carl Alcott — résumé and portfolio
+base_url = "https://resume.alcott.dev"
+title = "Carl Alcott"
+description = "Infrastructure and security engineer. Twenty years building and operating network, systems, and security infrastructure."
+
+compile_sass = true
+build_search_index = false
+generate_feeds = false
+default_language = "en"
+
+[markdown]
+smart_punctuation = true

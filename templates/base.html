@@ -1,0 +1,46 @@
+{% set profile = load_data(path="data/profile.toml") -%}
+{% set nav = load_data(path="data/navigation.toml") -%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ profile.name }} — {{ profile.role }}{% endblock title %}</title>
+  <meta name="description" content="{% block description %}{{ config.description }}{% endblock description %}">
+  <link rel="stylesheet" href="{{ get_url(path='style.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="{{ get_url(path='favicon.svg') }}" type="image/svg+xml">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="{{ get_url(path='') }}">{{ profile.name }}</a>
+    <nav class="site-nav" aria-label="Main">
+      {% for link in nav.links -%}
+      <a href="{{ get_url(path=link.url) }}">{{ link.label }}</a>
+      {% endfor -%}
+      <a class="nav-resume" href="{{ get_url(path=profile.resume_pdf) }}">Résumé&nbsp;(PDF)</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+{% block content %}{% endblock content %}
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <p>{{ profile.name }} · {{ profile.location }}</p>
+    <p>
+      <a href="{{ profile.email_href }}">{{ profile.email }}</a>
+      <span aria-hidden="true">·</span>
+      <a href="{{ profile.github_url }}">github.com/{{ profile.github }}</a>
+    </p>
+  </div>
+</footer>
+</body>
+</html>

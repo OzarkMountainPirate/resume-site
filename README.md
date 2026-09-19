@@ -73,5 +73,7 @@ zola serve            # preview at 127.0.0.1:1111
 
 ## Licence
 
-Site content and résumé text © Carl Alcott. The templates, stylesheet,
-tooling, and deployment configuration are MIT — take anything useful.
+MIT, covering the templates, stylesheet, tooling and deployment
+configuration — take anything useful.
+
+Site content and résumé text are © Carl Alcott and not offered for reuse.

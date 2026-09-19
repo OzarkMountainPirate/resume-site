@@ -17,6 +17,7 @@ highlights = [
   "Hardened hosts with nftables, fail2ban, auditd, LUKS full-disk encryption, ZFS snapshots and replication, and least-privilege Docker.",
   "Manage all configuration as version-controlled declarative infrastructure and publish selected tooling as open source.",
 ]
+stack = ["Suricata", "syslog-ng", "Logstash", "Elasticsearch", "Kibana", "CrowdSec", "Traefik", "Cloudflare Tunnel", "OpenVPN", "sslh", "nftables", "fail2ban", "auditd", "LUKS", "ZFS", "Docker", "Git"]
 
 [[jobs]]
 employer = "KCHelpdesk"
@@ -35,6 +36,7 @@ highlights = [
   "Administered Windows Server and Linux infrastructure; managed SAN/NAS storage with iSCSI, NFS, and SMB replication; automated with PowerShell and Bash.",
   "Implemented security-operations tooling — EDR/MDR, SIEM, vulnerability scanning, and security awareness training — and delivered Tier 3 escalation support.",
 ]
+stack = ["VLAN segmentation", "Enterprise wireless", "Multi-vendor firewalls", "DansGuardian", "SquidGuard", "Lightspeed", "GoGuardian", "PowerSchool", "Infinite Campus", "Google Workspace for Education", "3CX", "Microsoft 365", "Exchange Online", "SPF/DKIM/DMARC", "VMware ESXi", "vCenter", "Hyper-V", "Windows Server", "Active Directory", "Group Policy", "iSCSI", "NFS", "SMB", "PowerShell", "Bash", "Huntress", "AlienVault", "OpenVAS"]
 
 [[jobs]]
 employer = "Wentworth Military Academy & College"
@@ -50,6 +52,7 @@ highlights = [
   "Led VMware-based virtualization projects and campus-wide infrastructure upgrades.",
   "Oversaw backups, patch management, disaster recovery, and account security; trained staff and documented processes for continuity and audit readiness.",
 ]
+stack = ["Windows Server", "Active Directory", "Office 365", "Blackbaud", "Moodle", "Avaya", "VMware"]
 
 [[jobs]]
 employer = "KCHelpdesk"
@@ -61,6 +64,7 @@ highlights = [
   "Supported Active Directory, Group Policy, Exchange, and Hyper-V virtual machines across small and mid-sized business environments.",
   "Assisted with server upgrades, patching, and client project deployment; managed DNS, DHCP, and networking.",
 ]
+stack = ["Active Directory", "Group Policy", "Exchange", "Hyper-V", "DNS", "DHCP"]
 
 [[jobs]]
 employer = "Lexington Tech Solutions"

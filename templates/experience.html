@@ -25,15 +25,35 @@
           {% for h in job.highlights -%}<li>{{ h }}</li>{% endfor -%}
         </ul>
         {% endif %}
+        {% if job.stack %}
+        <p class="job-stack-label">Worked with</p>
+        <ul class="job-stack">
+          {% for t in job.stack -%}<li>{{ t }}</li>{% endfor -%}
+        </ul>
+        {% endif %}
       </div>
     </li>
     {% endfor -%}
   </ol>
 </section>
 
-<section class="band">
+<section class="band approach-band">
   <div class="wrap">
-    <h2>Skills</h2>
+    <h2>Approach</h2>
+    {%- set approach = load_data(path="data/approach.toml") -%}
+    <div class="approach">
+      {% for n in approach.notes -%}
+      <div class="approach-note">
+        <h3>{{ n.title }}</h3>
+        <p>{{ n.body }}</p>
+      </div>
+      {% endfor -%}
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>Skills</h2>
     <div class="skill-grid">
       {% for g in skills.groups -%}
       <div class="skill-group">
@@ -42,7 +62,6 @@
       </div>
       {% endfor -%}
     </div>
-  </div>
 </section>
 
 <section class="wrap creds">

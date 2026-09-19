@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Page not found — {{ config.title }}{% endblock title %}
+{% block content %}
+{%- set profile = load_data(path="data/profile.toml") -%}
+<section class="page wrap">
+  <h1>Page not found</h1>
+  <p>That page doesn't exist. Nothing here has moved recently, so it was
+  probably a mistyped or stale link.</p>
+  <ul>
+    <li><a href="{{ get_url(path='') }}">Start over</a></li>
+    <li><a href="{{ get_url(path='experience/') }}">Experience</a></li>
+    <li><a href="{{ get_url(path='projects/') }}">Projects</a></li>
+    <li><a href="{{ get_url(path=profile.resume_pdf) }}">Résumé (PDF)</a></li>
+  </ul>
+  <p>Or <a href="{{ profile.email_href }}">email me</a> if you were looking
+  for something specific.</p>
+</section>
+{% endblock content %}

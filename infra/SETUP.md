@@ -74,40 +74,51 @@ Load the private half into GitHub without it touching a shell history:
 gh secret set STYX_SSH_KEY --repo OzarkMountainPirate/resume-site < ~/.ssh/styx_deploy
 ```
 
-## 3. Tunnel ingress for SSH
+## 3. Tunnel routes — dashboard, not config.yml
 
-Add to `/opt/containers/cloudflared/config.yml`, **above** the catch-all
-`http_status:404` rule:
+This tunnel is **remotely managed**: its routes come from the Cloudflare
+dashboard, and the `ingress:` block in
+`/opt/containers/cloudflared/config.yml` is ignored. Editing that file has no
+effect and will mislead whoever reads it next.
 
-```yaml
-  - hostname: resume.alcott.dev
-    service: https://traefik
-    originRequest:
-      noTLSVerify: true
+Add routes under **Zero Trust → Networks → Tunnels → <tunnel> → Public
+Hostname**. Adding one there creates the DNS record automatically — there is
+no separate DNS step.
 
-  - hostname: ssh.alcott.dev
-    service: ssh://172.27.69.11:22
-```
+| Subdomain | Type | URL |
+|---|---|---|
+| `resume` | HTTPS | `https://traefik` (TLS verification off) |
+| *(deploy channel — see below)* | SSH | `<host-lan-ip>:22` |
 
-Then `docker compose -f /opt/containers/cloudflared/docker-compose.yml up -d`.
-Restarting cloudflared briefly interrupts the other tunnel hostnames.
+**The deploy hostname is deliberately not recorded here.** It is an opaque
+label, not `ssh` or any other word a subdomain scanner would try, and it lives
+only in the `STYX_SSH_HOST` GitHub secret. Nothing types it by hand, so there
+is no cost to it being unguessable.
 
-## 4. Cloudflare **(dashboard)**
+This is worth doing because the zone's certificates are wildcards: individual
+subdomains never appear in Certificate Transparency logs, so dictionary
+brute-forcing is the only realistic way to find one. A name that is not in a
+wordlist defeats that. It is defence in depth, not the control — the Access
+policy is the control.
 
-- **DNS** — `CNAME resume.alcott.dev → <tunnel-id>.cfargotunnel.com`, proxied.
-  Same for `ssh.alcott.dev`.
-- **Zero Trust → Access → Applications** — add a self-hosted application for
-  `ssh.alcott.dev`. Policy: **Service Auth**, matching one service token.
-  Nothing else should satisfy the policy — no email rules, no bypass.
-- **Zero Trust → Access → Service Auth** — create a service token. Its Client
-  ID and Secret become the `CF_ACCESS_CLIENT_ID` / `CF_ACCESS_CLIENT_SECRET`
-  GitHub secrets. The secret is shown once.
+## 4. Cloudflare Access for the SSH route **(dashboard)**
 
-Without an Access policy in front of it, `ssh.alcott.dev` would expose sshd to
-anyone who resolves the name. The policy is the control, not the obscurity of
-the hostname.
+Order matters — create the token first so the policy can reference it.
 
-## 5. Bring up the site
+1. **Zero Trust → Access → Service Auth → Create Service Token.** Name it for
+   the job (e.g. `github-actions-resume-deploy`). The Client Secret is shown
+   **once**; capture it now.
+2. **Zero Trust → Access → Applications → Add → Self-hosted.**
+2b. Application domain: the opaque hostname from step 3, never a guessable one.
+
+3. Add one policy, and set its **Action to `Service Auth`** — not `Allow`.
+   `Allow` expects an interactive identity and will not accept a token
+   non-interactively. Include: **Service Token** → the token from step 1.
+4. Delete any other policy on the application, including bypass rules. The
+   policy is the only thing standing in front of `sshd`; a second rule that
+   matches more broadly silently widens the door.
+
+## 5. Bring up the site## 5. Bring up the site
 
 ```bash
 cd /opt/containers/resume
@@ -130,7 +141,7 @@ certificate work is needed.
 
 ```bash
 # From the LAN, bypassing Cloudflare:
-curl -sS -H 'Host: resume.alcott.dev' -k https://172.27.69.11/ | head -5
+curl -sS -H 'Host: resume.alcott.dev' -k https://<host-lan-ip>/ | head -5
 
 # End to end:
 curl -sSI https://resume.alcott.dev | head -12

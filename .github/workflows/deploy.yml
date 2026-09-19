@@ -6,7 +6,7 @@
 # SECRETS (Settings → Secrets and variables → Actions):
 #   CF_ACCESS_CLIENT_ID       <uuid>.access — service token ID
 #   CF_ACCESS_CLIENT_SECRET   service token secret
-#   STYX_SSH_HOST             ssh.alcott.dev
+#   STYX_SSH_HOST             the tunnel's SSH hostname (opaque by design)
 #   STYX_SSH_USER             deploy
 #   STYX_SSH_KEY              private key for the deploy user
 #   STYX_DOCROOT              /opt/containers/resume/site

@@ -74,21 +74,41 @@ Load the private half into GitHub without it touching a shell history:
 gh secret set STYX_SSH_KEY --repo OzarkMountainPirate/resume-site < ~/.ssh/styx_deploy
 ```
 
-## 3. Tunnel routes — dashboard, not config.yml
+## 3. Tunnel routes — local config
 
-This tunnel is **remotely managed**: its routes come from the Cloudflare
-dashboard, and the `ingress:` block in
-`/opt/containers/cloudflared/config.yml` is ignored. Editing that file has no
-effect and will mislead whoever reads it next.
+This tunnel is **locally managed**: its routes come from
+`/opt/containers/cloudflared/config.yml` on the host. The Zero Trust dashboard
+will offer to migrate it so routes can be edited there instead — decline. The
+migration is irreversible and local config is the preference here.
 
-Add routes under **Zero Trust → Networks → Tunnels → <tunnel> → Public
-Hostname**. Adding one there creates the DNS record automatically — there is
-no separate DNS step.
+Add both rules above the `http_status:404` catch-all, which is what answers
+any hostname without a rule:
 
-| Subdomain | Type | URL |
-|---|---|---|
-| `resume` | HTTPS | `https://traefik` (TLS verification off) |
-| *(deploy channel — see below)* | SSH | `<host-lan-ip>:22` |
+```yaml
+  - hostname: resume.alcott.dev
+    service: https://traefik
+    originRequest:
+      noTLSVerify: true
+
+  # Deploy channel. The hostname is opaque by design — see below.
+  - hostname: <opaque-label>.alcott.dev
+    service: ssh://<host-lan-ip>:22
+```
+
+Then restart the connector. This briefly interrupts every other hostname the
+tunnel serves:
+
+```bash
+docker compose -f /opt/containers/cloudflared/docker-compose.yml up -d --force-recreate
+```
+
+**DNS is not automatic for a locally-managed tunnel.** Create a proxied CNAME
+for each hostname pointing at `<tunnel-id>.cfargotunnel.com`, or let
+cloudflared do it:
+
+```bash
+cloudflared tunnel route dns <tunnel-id> <hostname>
+```
 
 **The deploy hostname is deliberately not recorded here.** It is an opaque
 label, not `ssh` or any other word a subdomain scanner would try, and it lives
@@ -101,16 +121,24 @@ brute-forcing is the only realistic way to find one. A name that is not in a
 wordlist defeats that. It is defence in depth, not the control — the Access
 policy is the control.
 
-## 4. Cloudflare Access for the SSH route **(dashboard)**
+**Verify from outside the LAN.** Split-horizon DNS resolves these names to the
+host directly, so a local `curl` proves nothing about the tunnel path:
+
+```bash
+curl -sSI --resolve <hostname>:443:<a-cloudflare-edge-ip> https://<hostname>/
+```
+
+A 404 with `server: cloudflare` means the catch-all answered — the ingress
+rule is missing or the connector has not reloaded.
+
+## 4. Cloudflare Access for the deploy route **(dashboard)**
 
 Order matters — create the token first so the policy can reference it.
 
 1. **Zero Trust → Access → Service Auth → Create Service Token.** Name it for
-   the job (e.g. `github-actions-resume-deploy`). The Client Secret is shown
-   **once**; capture it now.
-2. **Zero Trust → Access → Applications → Add → Self-hosted.**
-2b. Application domain: the opaque hostname from step 3, never a guessable one.
-
+   the job. The Client Secret is shown **once**; capture it now.
+2. **Zero Trust → Access → Applications → Add → Self-hosted.** Application
+   domain: the opaque hostname, never a guessable one.
 3. Add one policy, and set its **Action to `Service Auth`** — not `Allow`.
    `Allow` expects an interactive identity and will not accept a token
    non-interactively. Include: **Service Token** → the token from step 1.

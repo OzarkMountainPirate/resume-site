@@ -1,19 +1,59 @@
-/* ── Carl Alcott — slate and a single teal accent ──────────────────
-   Deliberately quiet. Typography does the work; the only ornament is
-   a hairline rule and a mono face for stack strings.                */
+/* ── Carl Alcott ───────────────────────────────────────────────────
+   Quiet by default; the infrastructure diagrams carry the visual
+   weight, because the infrastructure is the subject.
 
-$ink:     #16191D;   // headings
-$body-ink:#31383F;   // body copy
-$muted:   #5E6872;   // secondary text
-$rule:    #DEE3E7;   // hairlines
-$wash:    #F6F8F9;   // banded sections
-$white:   #FFFFFF;
-$teal:    #1C6F62;   // links and accents — the only colour that carries meaning
-$teal-d:  #14544A;
+   Colour is tokenised so light and dark are two chosen palettes, not
+   one palette auto-inverted. The two accent hues are validated for
+   colour-vision deficiency separation against both surfaces; every
+   node they mark is also directly labelled, so identity is never
+   carried by hue alone.                                            */
 
-$display: "IBM Plex Sans", system-ui, sans-serif;
-$mono:    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-$body:    system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+:root {
+  --ink:        #16191D;   /* headings */
+  --body:       #31383F;   /* body copy */
+  --muted:      #5E6872;   /* secondary text */
+  --faint:      #69727C;   /* tertiary — diagram sublabels; AA on surface and wash */
+  --rule:       #DEE3E7;   /* hairlines */
+  --wash:       #F6F8F9;   /* banded sections */
+  --surface:    #FFFFFF;
+  --raised:     #FFFFFF;   /* node cards */
+  --link:       #1C6F62;   /* text token — AA on surface */
+  --link-hover: #14544A;
+
+  /* Validated categorical pair — serving path / detection path */
+  --flow-a:     #039580;
+  --flow-b:     #7370DC;
+  --flow-a-bg:  #F0FAF8;
+  --flow-b-bg:  #F4F3FD;
+
+  --shadow: 0 1px 2px rgba(22,25,29,.06), 0 4px 12px rgba(22,25,29,.04);
+
+  --display: "IBM Plex Sans", system-ui, sans-serif;
+  --mono:    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --body-font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink:        #EEF1F4;
+    --body:       #C3CAD1;
+    --muted:      #8F99A3;
+    --faint:      #7E8892;
+    --rule:       #272C32;
+    --wash:       #101316;
+    --surface:    #14171A;
+    --raised:     #191D21;
+    --link:       #45B8A4;
+    --link-hover: #5FCBB8;
+
+    --flow-a:     #058D79;
+    --flow-b:     #6D68D3;
+    --flow-a-bg:  #0C2521;
+    --flow-b-bg:  #171630;
+
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 14px rgba(0,0,0,.3);
+  }
+}
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -21,58 +61,59 @@ html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  font-family: $body;
-  color: $body-ink;
-  background: $white;
+  font-family: var(--body-font);
+  color: var(--body);
+  background: var(--surface);
   line-height: 1.6;
   font-size: 1.0625rem;
+  -webkit-font-smoothing: antialiased;
 }
 
 .wrap { max-width: 60rem; margin: 0 auto; padding: 0 1.25rem; }
 
-h1, h2, h3 { font-family: $display; color: $ink; line-height: 1.2; margin: 0 0 .5rem; }
+h1, h2, h3 { font-family: var(--display); color: var(--ink); line-height: 1.2; margin: 0 0 .5rem; }
 h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 600; letter-spacing: -.02em; }
 h2 { font-size: clamp(1.35rem, 3vw, 1.75rem); font-weight: 600; letter-spacing: -.01em; }
 h3 { font-size: 1.0625rem; font-weight: 600; }
 p  { margin: 0 0 1rem; }
 
-a { color: $teal; text-decoration-thickness: 1px; text-underline-offset: 2px; }
-a:hover { color: $teal-d; }
-a:focus-visible { outline: 3px solid $teal; outline-offset: 2px; border-radius: 2px; }
+a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { color: var(--link-hover); }
+a:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; border-radius: 2px; }
 
 .skip-link {
   position: absolute; left: -9999px;
-  &:focus { left: 1rem; top: 1rem; z-index: 10; background: $ink; color: $white;
+  &:focus { left: 1rem; top: 1rem; z-index: 10; background: var(--ink); color: var(--surface);
             padding: .6rem 1rem; border-radius: .3rem; text-decoration: none; }
 }
 
 /* ── Header ─────────────────────────────────────────────────────── */
-.site-header { border-bottom: 1px solid $rule; background: $white; }
+.site-header { border-bottom: 1px solid var(--rule); background: var(--surface); }
 .header-row { display: flex; align-items: center; justify-content: space-between;
               gap: 1rem; flex-wrap: wrap; padding-top: 1rem; padding-bottom: 1rem; }
-.brand { font-family: $display; font-weight: 600; font-size: 1.0625rem;
-         color: $ink; text-decoration: none; letter-spacing: -.01em; }
-.brand:hover { color: $teal; }
+.brand { font-family: var(--display); font-weight: 600; font-size: 1.0625rem;
+         color: var(--ink); text-decoration: none; letter-spacing: -.01em; }
+.brand:hover { color: var(--link); }
 .site-nav { display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap; }
-.site-nav a { color: $muted; text-decoration: none; font-size: .95rem; }
-.site-nav a:hover { color: $teal; }
-.nav-resume { color: $teal !important; font-weight: 500; }
+.site-nav a { color: var(--muted); text-decoration: none; font-size: .95rem; }
+.site-nav a:hover { color: var(--link); }
+.nav-resume { color: var(--link) !important; font-weight: 500; }
 
 main { min-height: 60vh; }
 
 /* ── Sections ───────────────────────────────────────────────────── */
 section { padding: 2.75rem 0; }
-.band { background: $wash; border-top: 1px solid $rule; border-bottom: 1px solid $rule; }
-.lede { color: $muted; max-width: 60ch; margin-bottom: 1.75rem; }
+.band { background: var(--wash); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.lede { color: var(--muted); max-width: 60ch; margin-bottom: 1.75rem; }
 .more { margin-top: 1.5rem; font-size: .95rem; }
 
 /* ── Hero ───────────────────────────────────────────────────────── */
 .hero { padding: 3.5rem 0 2.75rem; }
 .hero h1 { margin-bottom: .25rem; }
-.hero-role { font-family: $display; font-size: clamp(1.1rem, 2.5vw, 1.3rem);
-             color: $teal; font-weight: 500; margin-bottom: 1rem; }
+.hero-role { font-family: var(--display); font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+             color: var(--link); font-weight: 500; margin-bottom: 1rem; }
 .hero-summary { font-size: 1.125rem; max-width: 56ch; margin-bottom: 1.25rem; }
-.hero-meta { display: flex; gap: 1.25rem; flex-wrap: wrap; font-size: .95rem; color: $muted; }
+.hero-meta { display: flex; gap: 1.25rem; flex-wrap: wrap; font-size: .95rem; color: var(--muted); }
 
 /* ── Projects + systems ─────────────────────────────────────────── */
 .project-list, .system-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.75rem; }
@@ -81,7 +122,7 @@ section { padding: 2.75rem 0; }
 /* Six systems fall naturally into two rows of three. */
 .system-list  { grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
 .project h3, .system h3 { margin-bottom: .3rem; }
-.project-stack, .system-stack { font-family: $mono; font-size: .8rem; color: $muted;
+.project-stack, .system-stack { font-family: var(--mono); font-size: .8rem; color: var(--muted);
                                 margin-bottom: .5rem; line-height: 1.5; }
 .project-blurb { font-size: .95rem; max-width: 52ch; margin: 0; }
 .system p     { font-size: .95rem; max-width: 46ch; margin: 0; }
@@ -89,21 +130,21 @@ section { padding: 2.75rem 0; }
 /* ── Career spine ───────────────────────────────────────────────── */
 .spine { list-style: none; margin: 0; padding: 0; }
 .spine li { display: grid; grid-template-columns: 7.5rem 1fr; gap: .25rem 1.25rem;
-            padding: .7rem 0; border-top: 1px solid $rule; align-items: baseline; }
-.spine li:last-child { border-bottom: 1px solid $rule; }
-.spine-years { font-family: $mono; font-size: .8rem; color: $muted; }
-.spine-role { font-weight: 600; color: $ink; }
-.spine-employer { grid-column: 2; color: $muted; font-size: .95rem; }
+            padding: .7rem 0; border-top: 1px solid var(--rule); align-items: baseline; }
+.spine li:last-child { border-bottom: 1px solid var(--rule); }
+.spine-years { font-family: var(--mono); font-size: .8rem; color: var(--muted); }
+.spine-role { font-weight: 600; color: var(--ink); }
+.spine-employer { grid-column: 2; color: var(--muted); font-size: .95rem; }
 
 /* ── Experience ─────────────────────────────────────────────────── */
 .jobs { list-style: none; margin: 0; padding: 0; }
 .job { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1.5rem;
-       padding: 1.75rem 0; border-top: 1px solid $rule; }
-.job-years { font-family: $mono; font-size: .8rem; color: $muted; margin: .3rem 0 0; }
+       padding: 1.75rem 0; border-top: 1px solid var(--rule); }
+.job-years { font-family: var(--mono); font-size: .8rem; color: var(--muted); margin: .3rem 0 0; }
 .job-body h2 { font-size: 1.15rem; }
-.job-employer { color: $teal; font-size: .95rem; margin-bottom: .75rem; }
+.job-employer { color: var(--link); font-size: .95rem; margin-bottom: .75rem; }
 .job-summary { max-width: 64ch; }
-.job-note { color: $muted; font-size: .9rem; font-style: italic; max-width: 64ch; }
+.job-note { color: var(--muted); font-size: .9rem; font-style: italic; max-width: 64ch; }
 .job-points { margin: .75rem 0 0; padding-left: 1.1rem; }
 .job-points li { margin-bottom: .45rem; max-width: 64ch; font-size: .95rem; }
 
@@ -111,12 +152,12 @@ section { padding: 2.75rem 0; }
 .skill-grid { display: grid; gap: 1.75rem;
               grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
 .skill-group ul { list-style: none; margin: 0; padding: 0; }
-.skill-group li { font-size: .9rem; color: $body-ink; padding: .18rem 0; }
+.skill-group li { font-size: .9rem; color: var(--body); padding: .18rem 0; }
 .creds h2 { font-size: 1.15rem; margin-bottom: .75rem; }
 .creds { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
 .creds ul { list-style: none; margin: 0; padding: 0; }
 .creds li { font-size: .92rem; margin-bottom: .85rem; }
-.creds strong { color: $ink; font-weight: 600; }
+.creds strong { color: var(--ink); font-weight: 600; }
 
 /* ── Ordinary pages ─────────────────────────────────────────────── */
 .page p, .page li { max-width: 64ch; }
@@ -124,13 +165,213 @@ section { padding: 2.75rem 0; }
 .page li { margin-bottom: .4rem; }
 
 /* ── Footer ─────────────────────────────────────────────────────── */
-.site-footer { border-top: 1px solid $rule; padding: 2rem 0; margin-top: 1rem; }
+.site-footer { border-top: 1px solid var(--rule); padding: 2rem 0; margin-top: 1rem; }
 .footer-row { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
-.footer-row p { margin: 0; font-size: .9rem; color: $muted; }
-.footer-row span { margin: 0 .5rem; color: $rule; }
+.footer-row p { margin: 0; font-size: .9rem; color: var(--muted); }
+.footer-row span { margin: 0 .5rem; color: var(--rule); }
 
 @media (max-width: 34rem) {
   .job, .spine li { grid-template-columns: 1fr; gap: .35rem; }
   .spine-employer { grid-column: 1; }
   .job-years { margin-top: 0; }
+}
+
+/* ── Infrastructure flows ─────────────────────────────────────────
+   A node chain per path. Horizontal on wide screens, vertical on
+   narrow ones, with the connector rotating to match — so the arrows
+   always point the way the eye is travelling. Built from real
+   elements rather than SVG so the labels stay selectable and stay
+   legible at phone width instead of scaling to 6px.              */
+
+.flow { margin: 0 0 2.25rem; }
+.flow:last-of-type { margin-bottom: 0; }
+
+.flow-name {
+  font-family: var(--display); font-weight: 600; font-size: .78rem;
+  letter-spacing: .09em; text-transform: uppercase;
+  /* Text token, not the flow colour: the accent is validated for marks
+     at 3:1, not for text at 4.5:1. The dot carries the identity. */
+  color: var(--muted); margin-bottom: .85rem;
+  display: flex; align-items: center; gap: .55rem;
+}
+.flow-name::before {
+  content: ""; width: .6rem; height: .6rem; border-radius: 50%;
+  background: var(--accent); flex: none;
+}
+.flow-a { --accent: var(--flow-a); --accent-bg: var(--flow-a-bg); }
+.flow-b { --accent: var(--flow-b); --accent-bg: var(--flow-b-bg); }
+
+.flow-chain {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: nowrap; align-items: stretch; gap: 0;
+}
+
+.flow-node {
+  position: relative;
+  flex: 1 1 8.5rem; min-width: 8.5rem;
+  background: var(--raised);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: .4rem;
+  padding: .7rem .85rem;
+  box-shadow: var(--shadow);
+  margin: 0 1.6rem .75rem 0;
+}
+.flow-node:last-child { margin-right: 0; }
+
+/* Connector: a hairline with a chevron, drawn between nodes. */
+.flow-node:not(:last-child)::after {
+  content: "";
+  position: absolute; top: 50%; left: 100%;
+  width: 1.6rem; height: 1px;
+  background: var(--rule);
+  transform: translateY(-50%);
+}
+.flow-node:not(:last-child)::before {
+  content: "";
+  position: absolute; top: 50%; left: calc(100% + 1.15rem);
+  width: .34rem; height: .34rem;
+  border-top: 1.5px solid var(--accent);
+  border-right: 1.5px solid var(--accent);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.flow-label {
+  display: block; font-family: var(--display); font-weight: 600;
+  font-size: .9rem; color: var(--ink); line-height: 1.3;
+}
+.flow-sub {
+  display: block; font-family: var(--mono); font-size: .7rem;
+  color: var(--faint); margin-top: .18rem; line-height: 1.45;
+}
+.flow-note {
+  font-size: .88rem; color: var(--muted); max-width: 62ch;
+  margin: .35rem 0 0; padding-left: .85rem;
+  border-left: 2px solid var(--accent-bg);
+}
+
+/* Below the width that fits the longest chain on one line, stack
+   and point the connectors downward instead. */
+@media (max-width: 58rem) {
+  .flow-chain { display: block; }
+  .flow-node { margin: 0 0 1.5rem; min-width: 0; }
+  .flow-node:last-child { margin-bottom: 0; }
+  .flow-node:not(:last-child)::after {
+    top: 100%; left: 1.1rem; width: 1px; height: 1.5rem; transform: none;
+  }
+  .flow-node:not(:last-child)::before {
+    top: calc(100% + 1.05rem); left: 1.1rem;
+    transform: translateX(-50%) rotate(135deg);
+  }
+}
+
+/* ── Career timeline ──────────────────────────────────────────────
+   Spans rather than a list: the shape shows the long MSP tenure, the
+   gap it brackets, and that the current work is open-ended. The bars
+   are decorative — every date is also written out beside them, so
+   nothing here is carried by the graphic alone.                   */
+
+.timeline { margin-top: .5rem; }
+.tl-rows { list-style: none; margin: 0; padding: 0; }
+
+.tl-row {
+  display: grid;
+  grid-template-columns: minmax(13rem, 22rem) 1fr;
+  gap: 1.5rem; align-items: center;
+  padding: .55rem 0;
+  border-top: 1px solid var(--rule);
+}
+.tl-row:first-child { border-top: 0; }
+
+.tl-meta { display: block; }
+.tl-years {
+  display: block; font-family: var(--mono); font-size: .72rem;
+  color: var(--faint); letter-spacing: .02em;
+}
+.tl-title {
+  display: block; font-family: var(--display); font-weight: 600;
+  font-size: .92rem; color: var(--ink); line-height: 1.35;
+}
+.tl-employer { display: block; font-size: .84rem; color: var(--muted); }
+
+.tl-track {
+  position: relative; display: block; height: .52rem;
+  background: var(--rule); border-radius: .26rem;
+}
+.tl-bar {
+  position: absolute; top: 0; height: 100%;
+  background: var(--link); border-radius: .26rem;
+  min-width: .52rem;
+}
+/* The open-ended role fades out rather than stopping at a hard edge. */
+.tl-current .tl-bar {
+  background: linear-gradient(90deg, var(--flow-a) 0%, var(--flow-a) 55%, color-mix(in oklab, var(--flow-a) 35%, transparent) 100%);
+}
+
+.tl-axis {
+  display: grid;
+  grid-template-columns: minmax(13rem, 22rem) 1fr;
+  gap: 1.5rem;
+  margin-top: .45rem;
+}
+.tl-axis::before { content: ""; }
+.tl-scale { position: relative; height: 1.1rem; }
+.tl-tick {
+  position: absolute; top: 0;
+  font-family: var(--mono); font-size: .68rem; color: var(--faint);
+  transform: translateX(-50%); white-space: nowrap;
+}
+.tl-tick:first-child { transform: none; }
+.tl-tick:last-child  { transform: translateX(-100%); }
+
+@media (max-width: 40rem) {
+  .tl-row { grid-template-columns: 1fr; gap: .45rem; }
+  .tl-axis { display: none; }
+}
+
+/* ── Motion ───────────────────────────────────────────────────────
+   Scroll-driven, CSS only, no JavaScript anywhere on this site.
+
+   Gated behind @supports so browsers without scroll-timelines never
+   see the initial hidden state — content must never depend on an
+   animation having run. Disabled outright under reduced-motion.   */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .flow-node, .tl-row, .project, .system, .skill-group {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 42%;
+    }
+    /* Bars wipe out from their own start edge as the row arrives. */
+    .tl-bar {
+      animation: wipe linear both;
+      animation-timeline: view();
+      animation-range: entry 8% entry 55%;
+      transform-origin: left center;
+    }
+  }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes wipe {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Links get a underline that grows from the left rather than simply
+   appearing — cheap, but it makes the page feel built. */
+@media (prefers-reduced-motion: no-preference) {
+  .site-nav a, .more a {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size .25s ease;
+    text-decoration: none;
+  }
+  .site-nav a:hover, .more a:hover { background-size: 100% 1px; }
 }

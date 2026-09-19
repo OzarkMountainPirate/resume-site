@@ -1,0 +1,41 @@
+# ── Infrastructure flows ──────────────────────────────────────────
+# Two paths through the environment, rendered as node chains on the
+# homepage. Keep these truthful — every node should correspond to
+# something actually running.
+
+[[flows]]
+name  = "Serving path"
+key   = "a"
+note  = "No inbound ports. The tunnel dials out, so nothing on the host listens to the internet."
+[[flows.nodes]]
+label = "Internet"
+sub   = "visitor"
+[[flows.nodes]]
+label = "Cloudflare Tunnel"
+sub   = "outbound only"
+[[flows.nodes]]
+label = "Traefik"
+sub   = "CrowdSec · rate limit · headers"
+[[flows.nodes]]
+label = "nginx"
+sub   = "this page"
+
+[[flows]]
+name  = "Detection path"
+key   = "b"
+note  = "IDS events leave the gateway over TCP — the default UDP syslog path truncates long records and breaks JSON parsing."
+[[flows.nodes]]
+label = "Suricata"
+sub   = "IDS on the gateway"
+[[flows.nodes]]
+label = "syslog-ng"
+sub   = "TCP transport"
+[[flows.nodes]]
+label = "Logstash"
+sub   = "GeoIP enrichment"
+[[flows.nodes]]
+label = "Elasticsearch"
+sub   = "scoped ingest"
+[[flows.nodes]]
+label = "Kibana"
+sub   = "dashboards"

@@ -1,0 +1,32 @@
+{%- set history = load_data(path="data/experience.toml") -%}
+{%- set year_str = now() | date(format="%Y") -%}
+{%- set this_year = year_str | int -%}
+{%- set origin = 2005 -%}
+{%- set span = this_year - origin + 1 -%}
+<div class="timeline">
+  <ol class="tl-rows">
+    {% for job in history.jobs | reverse -%}
+    {%- set s = job.start | int -%}
+    {%- set e = job.end | replace(from="Present", to=year_str) | int -%}
+    {%- set left = (s - origin) * 100 / span -%}
+    {%- set width = (e - s + 1) * 100 / span -%}
+    <li class="tl-row{% if job.end == "Present" %} tl-current{% endif %}">
+      <span class="tl-meta">
+        <span class="tl-years">{{ job.start }}–{{ job.end }}</span>
+        <span class="tl-title">{{ job.title }}</span>
+        <span class="tl-employer">{{ job.employer }}</span>
+      </span>
+      <span class="tl-track" aria-hidden="true">
+        <span class="tl-bar" style="left:{{ left }}%;width:{{ width }}%"></span>
+      </span>
+    </li>
+    {% endfor -%}
+  </ol>
+  <div class="tl-axis" aria-hidden="true">
+    <div class="tl-scale">
+      {% for y in [2005, 2010, 2015, 2020, this_year] -%}
+      <span class="tl-tick" style="left:{{ (y - origin) * 100 / span }}%">{{ y }}</span>
+      {% endfor -%}
+    </div>
+  </div>
+</div>

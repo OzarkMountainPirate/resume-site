@@ -19,7 +19,10 @@
 <section class="band">
   <div class="wrap">
     <h2>Current infrastructure</h2>
-    {% include "partials/homelab.html" %}
+    <p class="lede">A three-host Linux environment running production-grade
+    detection, edge, and storage tooling. This site is served from it — the
+    request that drew this page took the path below.</p>
+    {% include "partials/flows.html" %}
   </div>
 </section>
 
@@ -34,15 +37,7 @@
 <section class="band">
   <div class="wrap">
     <h2>Career</h2>
-    <ul class="spine">
-      {% for job in history.jobs -%}
-      <li>
-        <span class="spine-years">{{ job.start }}–{{ job.end }}</span>
-        <span class="spine-role">{{ job.title }}</span>
-        <span class="spine-employer">{{ job.employer }}</span>
-      </li>
-      {% endfor -%}
-    </ul>
+    {% include "partials/timeline.html" %}
     <p class="more"><a href="{{ get_url(path='experience/') }}">Full history and skills</a></p>
   </div>
 </section>

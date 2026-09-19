@@ -1,0 +1,15 @@
+{%- set diagram = load_data(path="data/flows.toml") -%}
+{% for flow in diagram.flows -%}
+<figure class="flow flow-{{ flow.key }}">
+  <figcaption class="flow-name">{{ flow.name }}</figcaption>
+  <ol class="flow-chain">
+    {% for n in flow.nodes -%}
+    <li class="flow-node">
+      <span class="flow-label">{{ n.label }}</span>
+      <span class="flow-sub">{{ n.sub }}</span>
+    </li>
+    {% endfor -%}
+  </ol>
+  <p class="flow-note">{{ flow.note }}</p>
+</figure>
+{% endfor -%}

@@ -16,15 +16,14 @@ sudo chown -R deploy:deploy /opt/containers/resume/site
 
 ## 2. Restrict the deploy key
 
-`rrsync` ships with rsync and confines a key to one directory. Find it, then
-pin the key to a write-only session inside the document root:
+`rrsync` ships with rsync and confines a key to one directory. On styx it is
+at `/usr/bin/rrsync`. Pin the key to a write-only session inside the document
+root:
 
 ```bash
-RRSYNC=$(ls /usr/bin/rrsync /usr/share/rsync/scripts/rrsync 2>/dev/null | head -1)
-
 sudo install -d -m 700 -o deploy -g deploy /home/deploy/.ssh
-sudo tee /home/deploy/.ssh/authorized_keys >/dev/null <<EOF
-restrict,command="$RRSYNC -wo /opt/containers/resume/site" ssh-ed25519 AAAA...  github-actions-deploy
+sudo tee /home/deploy/.ssh/authorized_keys >/dev/null <<'EOF'
+restrict,command="/usr/bin/rrsync -wo /opt/containers/resume/site" ssh-ed25519 AAAA...REPLACE... github-actions-deploy
 EOF
 sudo chmod 600 /home/deploy/.ssh/authorized_keys
 sudo chown deploy:deploy /home/deploy/.ssh/authorized_keys
@@ -34,12 +33,18 @@ sudo chown deploy:deploy /home/deploy/.ssh/authorized_keys
 `-wo` makes the transfer write-only: the key can push files into the document
 root and cannot read elsewhere, run a shell, or escape the path.
 
-Generate the pair on a trusted machine, not on the runner:
+Generate the pair on a trusted machine, never on the runner:
 
 ```bash
-ssh-keygen -t ed25519 -f ./styx_deploy -C github-actions-deploy -N ''
-# ./styx_deploy      → GitHub secret STYX_SSH_KEY
-# ./styx_deploy.pub  → the authorized_keys line above
+ssh-keygen -t ed25519 -f ~/.ssh/styx_deploy -C github-actions-deploy -N ''
+# ~/.ssh/styx_deploy      → GitHub secret STYX_SSH_KEY
+# ~/.ssh/styx_deploy.pub  → the authorized_keys line above
+```
+
+Load the private half into GitHub without it touching a shell history:
+
+```bash
+gh secret set STYX_SSH_KEY --repo OzarkMountainPirate/resume-site < ~/.ssh/styx_deploy
 ```
 
 ## 3. Tunnel ingress for SSH

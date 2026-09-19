@@ -388,13 +388,19 @@ section { padding: 2.75rem 0; }
 }
 .job-stack {
   list-style: none; margin: 0; padding: 0;
-  display: flex; flex-wrap: wrap; gap: .35rem;
+  /* An aligned grid rather than ragged wrapping: with twenty-plus
+     entries, flex-wrap produces an uneven block that reads as a blob.
+     Columns line up, and the count adapts to the space available. */
+  display: grid; gap: .3rem .4rem;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
 }
 .job-stack li {
-  font-family: var(--mono); font-size: .72rem; line-height: 1.4;
+  font-family: var(--mono); font-size: .72rem; line-height: 1.35;
   color: var(--muted); background: var(--wash);
   border: 1px solid var(--rule); border-radius: .25rem;
-  padding: .16rem .45rem; max-width: none;
+  padding: .22rem .45rem; max-width: none;
+  display: flex; align-items: center;
+  overflow-wrap: anywhere;
 }
 
 .approach {

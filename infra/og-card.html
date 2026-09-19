@@ -1,0 +1,37 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { width: 1200px; height: 630px; background: #14171A;
+         font-family: "IBM Plex Sans", system-ui, sans-serif;
+         display: flex; flex-direction: column; justify-content: center;
+         padding: 0 88px; position: relative; overflow: hidden; }
+  .rule { position: absolute; left: 0; top: 0; width: 100%; height: 6px;
+          background: linear-gradient(90deg, #058D79 0%, #058D79 55%, #6D68D3 55%, #6D68D3 100%); }
+  h1 { font-size: 92px; font-weight: 600; color: #EEF1F4; letter-spacing: -.03em; line-height: 1; }
+  .role { font-size: 36px; font-weight: 500; color: #45B8A4; margin-top: 18px; letter-spacing: -.01em; }
+  .sub { font-size: 25px; color: #8F99A3; margin-top: 26px; max-width: 900px; line-height: 1.45; }
+  .chain { display: flex; align-items: center; gap: 14px; margin-top: 52px; }
+  .node { font-family: "IBM Plex Mono", monospace; font-size: 18px; color: #C3CAD1;
+          background: #191D21; border: 1px solid #272C32; border-left: 3px solid #058D79;
+          border-radius: 6px; padding: 10px 16px; }
+  .arrow { color: #3A4148; font-size: 18px; }
+  .foot { position: absolute; bottom: 44px; left: 88px; right: 88px;
+          display: flex; justify-content: space-between;
+          font-family: "IBM Plex Mono", monospace; font-size: 19px; color: #6E7882; }
+</style></head><body>
+  <div class="rule"></div>
+  <h1>Carl Alcott</h1>
+  <div class="role">Infrastructure &amp; Security Engineer</div>
+  <div class="sub">Windows Server and Linux, virtualization, enterprise networking,
+    security operations, and infrastructure as code. Since 2005.</div>
+  <div class="chain">
+    <span class="node">Cloudflare Tunnel</span><span class="arrow">&rsaquo;</span>
+    <span class="node">Traefik</span><span class="arrow">&rsaquo;</span>
+    <span class="node">CrowdSec</span><span class="arrow">&rsaquo;</span>
+    <span class="node">this page</span>
+  </div>
+  <div class="foot"><span>resume.alcott.dev</span><span>github.com/OzarkMountainPirate</span></div>
+</body></html>

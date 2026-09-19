@@ -7,11 +7,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{{ profile.name }} — {{ profile.role }}{% endblock title %}</title>
   <meta name="description" content="{% block description %}{{ config.description }}{% endblock description %}">
-  <link rel="stylesheet" href="{{ get_url(path='style.css') }}">
+  <link rel="stylesheet" href="{{ get_url(path='style.css') | safe }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="icon" href="{{ get_url(path='favicon.svg') }}" type="image/svg+xml">
+  <link rel="icon" href="{{ get_url(path='favicon.svg') | safe }}" type="image/svg+xml">
+
+  {# Canonical and social preview. Without these a shared link renders as
+     a bare URL in LinkedIn, Slack and mail clients. #}
+  {%- set page_url = current_url | default(value=config.base_url) -%}
+  <link rel="canonical" href="{{ page_url | safe }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ profile.name }}">
+  <meta property="og:url" content="{{ page_url | safe }}">
+  {%- if page.title -%}{% set social_title = page.title ~ " — " ~ profile.name %}{%- else -%}{% set social_title = profile.name ~ " — " ~ profile.role %}{%- endif -%}
+  <meta property="og:title" content="{{ social_title }}">
+  <meta property="og:description" content="{{ page.description | default(value=config.description) }}">
+  <meta property="og:image" content="{{ get_url(path='og.png') | safe }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{ profile.name }} — {{ profile.role }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ social_title }}">
+  <meta name="twitter:description" content="{{ config.description }}">
+  <meta name="twitter:image" content="{{ get_url(path='og.png') | safe }}">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>

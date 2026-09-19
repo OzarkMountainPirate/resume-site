@@ -1,5 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
+{%- set p = load_data(path="data/profile.toml") -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{ p.name | safe }}",
+  "jobTitle": "{{ p.role | safe }}",
+  "description": "{{ p.summary | safe }}",
+  "email": "mailto:{{ p.email | safe }}",
+  "url": "{{ config.base_url | safe }}",
+  "sameAs": ["{{ p.github_url | safe }}"],
+  "address": {
+    "@type": "PostalAddress",
+    "addressRegion": "MO",
+    "addressCountry": "US"
+  },
+  "knowsAbout": [
+    "Systems administration", "Network administration", "Windows Server",
+    "Active Directory", "Linux", "Virtualization", "Security operations",
+    "Infrastructure as code"
+  ]
+}
+</script>
 {%- set profile = load_data(path="data/profile.toml") -%}
 {%- set history = load_data(path="data/experience.toml") -%}
 

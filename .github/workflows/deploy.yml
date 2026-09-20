@@ -8,8 +8,8 @@
 #   CF_ACCESS_CLIENT_SECRET   service token secret
 #   STYX_SSH_HOST             the tunnel's SSH hostname (opaque by design)
 #   STYX_SSH_USER             deploy
+#   STYX_HOST_KEY             the host's public key, for pinning
 #   STYX_SSH_KEY              private key for the deploy user
-#   STYX_DOCROOT              /opt/containers/resume/site
 #
 # The deploy key is restricted on the host side: its authorized_keys
 # entry pins it to `rrsync -wo <docroot>`, so it can write into the
@@ -99,9 +99,13 @@ jobs:
           TUNNEL_SERVICE_TOKEN_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
           TUNNEL_SERVICE_TOKEN_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
         run: |
+          # The destination is "./", not the document root's absolute path.
+          # rrsync anchors every path at the directory named in the key's
+          # authorized_keys restriction, so an absolute path here would be
+          # re-anchored beneath it and fail.
           rsync -az --delete --itemize-changes \
             -e "ssh -F $HOME/.ssh/config" \
-            public/ "styx-deploy:${{ secrets.STYX_DOCROOT }}/"
+            public/ "styx-deploy:./"
 
       - name: Clean up key
         if: always()

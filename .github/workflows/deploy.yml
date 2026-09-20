@@ -9,6 +9,8 @@
 #   STYX_SSH_HOST             the tunnel's SSH hostname (opaque by design)
 #   STYX_SSH_USER             deploy
 #   STYX_HOST_KEY             the host's public key, for pinning
+#   CF_PURGE_TOKEN            Cloudflare API token, Zone.Cache Purge only
+#   CF_ZONE_ID                the alcott.dev zone id
 #   STYX_SSH_KEY              private key for the deploy user
 #
 # The deploy key is restricted on the host side: its authorized_keys
@@ -106,6 +108,32 @@ jobs:
           rsync -az --delete --itemize-changes \
             -e "ssh -F $HOME/.ssh/config" \
             public/ "styx-deploy:./"
+
+      # Cloudflare caches the PDF, stylesheet and preview image at the edge.
+      # Without this, a deploy lands at the origin but visitors keep getting
+      # the previous copy until the TTL expires — silently, with nothing in
+      # the run to indicate it. Purging by explicit URL rather than
+      # purge_everything so the zone's other hostnames keep their cache.
+      - name: Purge the Cloudflare cache
+        env:
+          TOKEN: ${{ secrets.CF_PURGE_TOKEN }}
+          ZONE: ${{ secrets.CF_ZONE_ID }}
+        run: |
+          BASE=$(grep -m1 '^base_url' config.toml | cut -d'"' -f2)
+          # index.html is served at its directory URL, so map it back.
+          URLS=$(cd public && find . -type f \
+                 | sed -e 's|^\./||' -e 's|index\.html$||' \
+                 | sed "s|^|${BASE%/}/|" | sort -u)
+          echo "purging $(wc -l <<<"$URLS") urls"
+          PAYLOAD=$(jq -Rn --arg u "$URLS" '{files: ($u | split("\n") | map(select(length > 0)))}')
+          RESP=$(curl -sS -X POST \
+            "https://api.cloudflare.com/client/v4/zones/$ZONE/purge_cache" \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            --data "$PAYLOAD")
+          echo "$RESP" | jq -e '.success == true' >/dev/null \
+            && echo "cache purged" \
+            || { echo "purge failed:"; echo "$RESP" | jq '.errors'; exit 1; }
 
       - name: Clean up key
         if: always()

@@ -89,12 +89,12 @@ highlights = [
 ]
 
 [[jobs]]
-employer = "HP subcontract — Bank of America branch refresh"
+employer = "S&A Computers"
 title    = "Field Technician (contract)"
 start    = "2005"
 end      = "2006"
 location = "Midwest and Arizona"
-summary  = "Branch-office hardware refresh for Bank of America, working as a subcontractor to HP across sites in the Midwest and Arizona."
+summary  = "Branch-office hardware refresh for Bank of America, as a subcontractor to HP, across sites in the Midwest and Arizona."
 highlights = [
   "Travelled a multi-state territory installing and cutting over branch workstation and peripheral hardware on a fixed per-site schedule.",
 ]

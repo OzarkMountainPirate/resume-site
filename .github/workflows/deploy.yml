@@ -74,20 +74,30 @@ jobs:
           install -d -m 700 ~/.ssh
           install -m 600 /dev/null ~/.ssh/deploy_key
           printf '%s\n' "$KEY" > ~/.ssh/deploy_key
+          # Pin the host key. accept-new would trust whatever answers on the
+          # first connection; this fails closed if the host identity changes.
+          install -m 600 /dev/null ~/.ssh/known_hosts
+          printf '%s %s\n' "$HOST" "${{ secrets.STYX_HOST_KEY }}" > ~/.ssh/known_hosts
+          # ssh_config has no line-continuation syntax, so ProxyCommand must
+          # be a single line. The Access service token is passed through the
+          # environment instead of argv, which also keeps it out of the
+          # process list on the runner.
           cat > ~/.ssh/config <<EOF
           Host styx-deploy
             HostName $HOST
             User ${{ secrets.STYX_SSH_USER }}
             IdentityFile ~/.ssh/deploy_key
             IdentitiesOnly yes
-            StrictHostKeyChecking accept-new
-            ProxyCommand cloudflared access ssh --hostname %h \
-              --service-token-id ${{ secrets.CF_ACCESS_CLIENT_ID }} \
-              --service-token-secret ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+            UserKnownHostsFile ~/.ssh/known_hosts
+            StrictHostKeyChecking yes
+            ProxyCommand cloudflared access ssh --hostname %h
           EOF
           chmod 600 ~/.ssh/config
 
       - name: Deploy
+        env:
+          TUNNEL_SERVICE_TOKEN_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          TUNNEL_SERVICE_TOKEN_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
         run: |
           rsync -az --delete --itemize-changes \
             -e "ssh -F $HOME/.ssh/config" \

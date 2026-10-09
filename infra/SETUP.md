@@ -76,6 +76,12 @@ gh secret set STYX_SSH_KEY --repo OzarkMountainPirate/resume-site < ~/.ssh/styx_
 
 ## 3. Tunnel routes — local config
 
+The connector's compose file (`docker-compose.yml`) is owned by infra-ops'
+`styx_cloudflared` Ansible role as of kickoff #22 Phase A — this file no
+longer documents an unowned, hand-managed container. `config.yml`,
+`credentials.json` and `cert.pem` are still the tunnel's own unmanaged state,
+edited by hand as below.
+
 This tunnel is **locally managed**: its routes come from
 `/opt/containers/cloudflared/config.yml` on the host. The Zero Trust dashboard
 will offer to migrate it so routes can be edited there instead — decline. The

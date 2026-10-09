@@ -34,7 +34,7 @@ sub   = "this page"
 [[flows]]
 name  = "Detection path"
 key   = "b"
-note  = "This page's own request crossed the tunnel encrypted, so the gateway IDS never saw it. Two sources cover the two layers — Suricata watches the network, Traefik and CrowdSec (serving path, above) watch the application — and both land in one place, joined on client IP."
+note  = "The request for this page crossed the gateway encrypted inside the tunnel, so the gateway IDS never saw it. Two sources cover the two layers: Suricata watches the network, Traefik and CrowdSec watch the application. Both land in one place and join on client IP."
 [[flows.sources]]
 label = "Suricata"
 sub   = "gateway IDS · syslog-ng over TCP"
@@ -46,7 +46,7 @@ label = "Logstash"
 sub   = "pipeline per source · GeoIP"
 [[flows.nodes]]
 label = "Elasticsearch"
-sub   = "scoped ingest · retention"
+sub   = "scoped ingest"
 [[flows.nodes]]
-label = "Kibana / Grafana"
-sub   = "dashboards · alerting"
+label = "Kibana"
+sub   = "joined on client IP"

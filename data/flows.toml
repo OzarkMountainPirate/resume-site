@@ -3,15 +3,20 @@
 # homepage. Keep these truthful — every node should correspond to
 # something actually running.
 #
-# A flow's optional `sources` array renders as parallel starting boxes
-# (stacked, not side by side) that merge into the first `nodes` entry -
-# use it when more than one thing feeds the same downstream pipeline.
-# A flow with no `sources` renders as a single linear chain, as before.
+# A flow's optional `sources` array renders as separate boxes, stacked,
+# that merge into a shared connector to the first `nodes` entry - use it
+# when more than one thing feeds the same downstream pipeline. A flow
+# with no `sources` renders as a single linear chain, as before.
+#
+# A node's optional `tag` renders as a small dashed-off annotation at
+# the bottom of its box - use it to point at a relationship this
+# diagram doesn't otherwise draw (e.g. one node also feeding a separate
+# flow elsewhere on the page).
 
 [[flows]]
 name  = "Serving path"
 key   = "a"
-note  = "No inbound ports. The tunnel dials out, so nothing on the host listens to the internet."
+note  = "No inbound ports. The tunnel dials out, so nothing on the host listens to the internet. Traefik is the first point where a request is readable, so it is also where the request is inspected."
 [[flows.nodes]]
 label = "Internet"
 sub   = "visitor"
@@ -21,6 +26,7 @@ sub   = "outbound only"
 [[flows.nodes]]
 label = "Traefik"
 sub   = "CrowdSec · rate limit · headers"
+tag   = "access log to detection"
 [[flows.nodes]]
 label = "nginx"
 sub   = "this page"

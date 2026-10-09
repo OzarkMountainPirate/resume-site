@@ -5,8 +5,8 @@
 [[projects]]
 name  = "suricata-elk"
 url   = "https://github.com/OzarkMountainPirate/suricata-elk"
-stack = "Suricata · syslog-ng · Logstash · Elasticsearch · Kibana"
-blurb = "Ships pfSense/Suricata EVE logs into a self-hosted ELK stack over TCP, with GeoIP enrichment and a scoped, non-superuser ingest path. Documents a working deployment, including why the obvious UDP syslog path truncates long records and breaks JSON parsing."
+stack = "Suricata · CrowdSec · Logstash · Elasticsearch · Grafana"
+blurb = "A self-hosted ELK stack and small SOC built on top of it: Suricata and CrowdSec from two hosts, retention, a scoped non-superuser path for every write and every read, Grafana alerting, and a daily digest. Documents real operational failures hit along the way — a query clause that silently matched nothing, an alert that fired on retry noise instead of an attack, a notification plugin's permissions taking down the whole process it belonged to — not just the parts that worked on the first try."
 
 [[projects]]
 name  = "ark-fleet"

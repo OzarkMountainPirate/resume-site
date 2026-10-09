@@ -8,17 +8,12 @@ intro = "A three-host Linux environment running production-grade detection, edge
 [[systems]]
 name  = "Network detection"
 stack = "Suricata · syslog-ng · Logstash · Elasticsearch · Kibana"
-desc  = "IDS events from the gateway shipped over TCP into a self-hosted ELK stack, with GeoIP enrichment, a scoped non-superuser ingest path, and a bounded retention policy."
+desc  = "IDS events from the gateway shipped over TCP into a self-hosted ELK stack, with GeoIP enrichment and a scoped non-superuser ingest path."
 
 [[systems]]
 name  = "Intrusion prevention"
 stack = "CrowdSec"
-desc  = "Behaviour-based blocking at each host's reverse proxy, with decisions from every host correlated centrally to catch the same actor hitting more than one edge."
-
-[[systems]]
-name  = "Alerting and reporting"
-stack = "Grafana · systemd timers"
-desc  = "Detection rules provisioned as code against the same data, routed to a notification channel, plus a daily digest summarising pipeline health and anything that stood out — reading the logs is automated, not just collecting them."
+desc  = "Behaviour-based blocking across the fleet, with a bouncer at each host's reverse proxy."
 
 [[systems]]
 name  = "Edge and remote access"

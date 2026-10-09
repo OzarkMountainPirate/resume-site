@@ -217,37 +217,17 @@ section { padding: 2.75rem 0; }
   box-shadow: var(--shadow);
   margin: 0 1.6rem .75rem 0;
 }
-.flow-chain > .flow-node:last-child { margin-right: 0; }
+.flow-node:last-child { margin-right: 0; }
 
-/* Two or more boxes that feed the same downstream node (data/flows.toml's
-   optional `sources` array): a column of full, separate .flow-node cards,
-   occupying one slot in the chain - the group itself has no visible box,
-   only its children do. The connector below treats the group as a single
-   chain item, same as a lone node would get, so it reads as "both of
-   these merge into what's next" rather than drawing two connectors. */
-.flow-node-group {
-  position: relative;
-  flex: 1 1 8.5rem; min-width: 8.5rem;
-  display: flex; flex-direction: column; gap: .6rem;
-  margin: 0 1.6rem .75rem 0;
-}
-.flow-chain > .flow-node-group:last-child { margin-right: 0; }
-.flow-node-group .flow-node { margin: 0; flex: none; min-width: 0; }
-
-/* Connector: a hairline with a chevron, drawn after each chain item
-   except the last - a lone node, or a whole source group. Scoped to
-   direct children of .flow-chain so it never also decorates the
-   individual boxes nested inside a .flow-node-group. */
-.flow-chain > .flow-node:not(:last-child)::after,
-.flow-chain > .flow-node-group:not(:last-child)::after {
+/* Connector: a hairline with a chevron, drawn between nodes. */
+.flow-node:not(:last-child)::after {
   content: "";
   position: absolute; top: 50%; left: 100%;
   width: 1.6rem; height: 1px;
   background: var(--rule);
   transform: translateY(-50%);
 }
-.flow-chain > .flow-node:not(:last-child)::before,
-.flow-chain > .flow-node-group:not(:last-child)::before {
+.flow-node:not(:last-child)::before {
   content: "";
   position: absolute; top: 50%; left: calc(100% + 1.15rem);
   width: .34rem; height: .34rem;
@@ -264,22 +244,6 @@ section { padding: 2.75rem 0; }
   display: block; font-family: var(--mono); font-size: .7rem;
   color: var(--faint); margin-top: .18rem; line-height: 1.45;
 }
-
-/* A small annotation at the bottom of a node (a node's optional `tag`
-   in data/flows.toml), for a relationship this diagram doesn't
-   otherwise draw - e.g. this node also feeding a different flow. */
-.flow-tag {
-  display: flex; align-items: center; gap: .4rem;
-  margin-top: .55rem; padding-top: .5rem;
-  border-top: 1px dashed var(--rule);
-  font-family: var(--mono); font-size: .68rem;
-  color: var(--faint);
-}
-.flow-tag::before {
-  content: ""; width: .34rem; height: .34rem; border-radius: 50%;
-  background: var(--accent); flex: none;
-}
-
 .flow-note {
   font-size: .88rem; color: var(--muted); max-width: 62ch;
   margin: .35rem 0 0; padding-left: .85rem;
@@ -290,16 +254,12 @@ section { padding: 2.75rem 0; }
    and point the connectors downward instead. */
 @media (max-width: 58rem) {
   .flow-chain { display: block; }
-  .flow-chain > .flow-node,
-  .flow-chain > .flow-node-group { margin: 0 0 1.5rem; min-width: 0; }
-  .flow-chain > .flow-node:last-child,
-  .flow-chain > .flow-node-group:last-child { margin-bottom: 0; }
-  .flow-chain > .flow-node:not(:last-child)::after,
-  .flow-chain > .flow-node-group:not(:last-child)::after {
+  .flow-node { margin: 0 0 1.5rem; min-width: 0; }
+  .flow-node:last-child { margin-bottom: 0; }
+  .flow-node:not(:last-child)::after {
     top: 100%; left: 1.1rem; width: 1px; height: 1.5rem; transform: none;
   }
-  .flow-chain > .flow-node:not(:last-child)::before,
-  .flow-chain > .flow-node-group:not(:last-child)::before {
+  .flow-node:not(:last-child)::before {
     top: calc(100% + 1.05rem); left: 1.1rem;
     transform: translateX(-50%) rotate(135deg);
   }

@@ -11,7 +11,7 @@ end      = "Present"
 location = "Lake of the Ozarks, MO"
 summary  = "Design, build, and operate a multi-host Linux environment developing production-grade security and infrastructure tooling."
 highlights = [
-  "Built a detection pipeline carrying Suricata IDS events through syslog-ng and Logstash into Elasticsearch and Kibana, with GeoIP enrichment and custom dashboards.",
+  "Built a detection pipeline carrying Suricata IDS events and Traefik and CrowdSec application events into Elasticsearch and Kibana, with GeoIP enrichment and custom dashboards, closing the visibility gap left by tunnel-published services.",
   "Deployed CrowdSec intrusion prevention across a three-host fleet with per-host reverse-proxy bouncers.",
   "Engineered a secure edge and remote-access stack using Cloudflare Tunnels, Traefik, sslh, and OpenVPN.",
   "Hardened hosts with nftables, fail2ban, auditd, LUKS full-disk encryption, ZFS snapshots and replication, and least-privilege Docker.",

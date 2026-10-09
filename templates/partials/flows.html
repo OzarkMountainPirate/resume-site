@@ -4,10 +4,24 @@
   <figcaption class="flow-name">{{ flow.name }}</figcaption>
   <ol class="flow-chain">
     {% for n in flow.nodes -%}
+    {% if n.inputs -%}
+    <li class="flow-node flow-merge">
+      <ul class="flow-inputs">
+        {% for i in n.inputs -%}
+        <li class="flow-input">
+          <span class="flow-label">{{ i.label }}</span>
+          <span class="flow-sub">{{ i.sub }}</span>
+        </li>
+        {% endfor -%}
+      </ul>
+    </li>
+    {% else -%}
     <li class="flow-node">
       <span class="flow-label">{{ n.label }}</span>
       <span class="flow-sub">{{ n.sub }}</span>
+      {% if n.tap %}<span class="flow-tap">{{ n.tap }}</span>{% endif %}
     </li>
+    {% endif -%}
     {% endfor -%}
   </ol>
   <p class="flow-note">{{ flow.note }}</p>

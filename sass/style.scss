@@ -250,6 +250,52 @@ section { padding: 2.75rem 0; }
   border-left: 2px solid var(--accent-bg);
 }
 
+/* Tap: this node also feeds the other flow. The dot is the other
+   flow's colour, the text stays a text token for contrast. */
+.flow-tap {
+  display: flex; align-items: center; gap: .4rem;
+  font-family: var(--mono); font-size: .68rem; color: var(--muted);
+  margin-top: .5rem; padding-top: .45rem;
+  border-top: 1px dashed var(--rule);
+}
+.flow-tap::before {
+  content: ""; width: .45rem; height: .45rem; border-radius: 50%;
+  background: var(--flow-b); flex: none;
+}
+
+/* Merge: several inputs stacked in one slot of the chain, joined by a
+   bracket on the right so the outgoing connector reads as their sum. */
+.flow-merge {
+  background: none; border: 0; box-shadow: none; padding: 0;
+  display: flex;
+}
+.flow-inputs {
+  list-style: none; margin: 0; padding: 0 .8rem 0 0;
+  display: flex; flex-direction: column; justify-content: center;
+  gap: .6rem; flex: 1; position: relative;
+}
+.flow-input {
+  position: relative;
+  background: var(--raised);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: .4rem;
+  padding: .7rem .85rem;
+  box-shadow: var(--shadow);
+}
+.flow-input::after {
+  content: ""; position: absolute; top: 50%; left: 100%;
+  width: .8rem; height: 1px; background: var(--rule);
+}
+/* The bracket is drawn in segments, one per input, so it runs from
+   the first input's midpoint to the last one's whatever their heights. */
+.flow-input::before {
+  content: ""; position: absolute; left: calc(100% + .8rem - 1px);
+  top: 0; bottom: -.6rem; width: 1px; background: var(--rule);
+}
+.flow-input:first-child::before { top: 50%; }
+.flow-input:last-child::before  { bottom: 50%; }
+
 /* Below the width that fits the longest chain on one line, stack
    and point the connectors downward instead. */
 @media (max-width: 58rem) {
@@ -263,6 +309,9 @@ section { padding: 2.75rem 0; }
     top: calc(100% + 1.05rem); left: 1.1rem;
     transform: translateX(-50%) rotate(135deg);
   }
+  /* Stacked inputs already read top to bottom; drop the bracket. */
+  .flow-inputs { padding-right: 0; }
+  .flow-input::before, .flow-input::after { display: none; }
 }
 
 /* ── Career timeline ──────────────────────────────────────────────

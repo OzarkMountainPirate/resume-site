@@ -2,11 +2,17 @@
 # Two paths through the environment, rendered as node chains on the
 # homepage. Keep these truthful — every node should correspond to
 # something actually running.
+#
+# A node may carry:
+#   tap    = short text marking that this node also feeds the other
+#            flow. Rendered as a small tagged line under the node.
+#   inputs = a list of {label, sub} rendered as stacked nodes that
+#            converge on the next node in the chain.
 
 [[flows]]
 name  = "Serving path"
 key   = "a"
-note  = "No inbound ports. The tunnel dials out, so nothing on the host listens to the internet."
+note  = "No inbound ports. The tunnel dials out, so nothing on the host listens to the internet. Traefik is the first point where a request is readable, so it is also where the request is inspected."
 [[flows.nodes]]
 label = "Internet"
 sub   = "visitor"
@@ -16,6 +22,7 @@ sub   = "outbound only"
 [[flows.nodes]]
 label = "Traefik"
 sub   = "CrowdSec · rate limit · headers"
+tap   = "access log to detection"
 [[flows.nodes]]
 label = "nginx"
 sub   = "this page"
@@ -23,19 +30,20 @@ sub   = "this page"
 [[flows]]
 name  = "Detection path"
 key   = "b"
-note  = "IDS events leave the gateway over TCP — the default UDP syslog path truncates long records and breaks JSON parsing."
+note  = "The request for this page crossed the gateway encrypted inside the tunnel, so the gateway IDS never saw it. Two sources cover the two layers: Suricata watches the network, Traefik and CrowdSec watch the application. Both land in one place and join on client IP."
 [[flows.nodes]]
-label = "Suricata"
-sub   = "IDS on the gateway"
-[[flows.nodes]]
-label = "syslog-ng"
-sub   = "TCP transport"
+  [[flows.nodes.inputs]]
+  label = "Suricata"
+  sub   = "gateway IDS · syslog-ng over TCP"
+  [[flows.nodes.inputs]]
+  label = "Traefik + CrowdSec"
+  sub   = "access log · decisions"
 [[flows.nodes]]
 label = "Logstash"
-sub   = "GeoIP enrichment"
+sub   = "pipeline per source · GeoIP"
 [[flows.nodes]]
 label = "Elasticsearch"
 sub   = "scoped ingest"
 [[flows.nodes]]
 label = "Kibana"
-sub   = "dashboards"
+sub   = "joined on client IP"

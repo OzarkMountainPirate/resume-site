@@ -250,6 +250,22 @@ section { padding: 2.75rem 0; }
   border-left: 2px solid var(--accent-bg);
 }
 
+/* A flow-node that holds more than one source (data/flows.toml's
+   optional `sources` array): same outer box as a regular node, but
+   stacks its own mini-rows, divided by a hairline, instead of a single
+   label/sub pair. The merge into the rest of the chain reads the same
+   way a single node would - one chevron out, on the box, not per row. */
+.flow-sources { padding: 0; }
+.flow-source-list {
+  list-style: none; margin: 0; padding: 0;
+}
+.flow-source-list li {
+  padding: .55rem .85rem;
+}
+.flow-source-list li:not(:last-child) {
+  border-bottom: 1px dashed var(--rule);
+}
+
 /* Below the width that fits the longest chain on one line, stack
    and point the connectors downward instead. */
 @media (max-width: 58rem) {

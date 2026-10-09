@@ -3,6 +3,15 @@
 <figure class="flow flow-{{ flow.key }}">
   <figcaption class="flow-name">{{ flow.name }}</figcaption>
   <ol class="flow-chain">
+    {% if flow.sources -%}
+    <li class="flow-node flow-sources">
+      <ul class="flow-source-list">
+        {% for s in flow.sources -%}
+        <li><span class="flow-label">{{ s.label }}</span><span class="flow-sub">{{ s.sub }}</span></li>
+        {% endfor -%}
+      </ul>
+    </li>
+    {% endif -%}
     {% for n in flow.nodes -%}
     <li class="flow-node">
       <span class="flow-label">{{ n.label }}</span>

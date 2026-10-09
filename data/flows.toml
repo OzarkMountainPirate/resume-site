@@ -2,6 +2,11 @@
 # Two paths through the environment, rendered as node chains on the
 # homepage. Keep these truthful — every node should correspond to
 # something actually running.
+#
+# A flow's optional `sources` array renders as parallel starting boxes
+# (stacked, not side by side) that merge into the first `nodes` entry -
+# use it when more than one thing feeds the same downstream pipeline.
+# A flow with no `sources` renders as a single linear chain, as before.
 
 [[flows]]
 name  = "Serving path"
@@ -23,19 +28,19 @@ sub   = "this page"
 [[flows]]
 name  = "Detection path"
 key   = "b"
-note  = "IDS events leave the gateway over TCP — the default UDP syslog path truncates long records and breaks JSON parsing."
-[[flows.nodes]]
+note  = "This page's own request crossed the tunnel encrypted, so the gateway IDS never saw it. Two sources cover the two layers — Suricata watches the network, Traefik and CrowdSec (serving path, above) watch the application — and both land in one place, joined on client IP."
+[[flows.sources]]
 label = "Suricata"
-sub   = "IDS on the gateway"
-[[flows.nodes]]
-label = "syslog-ng"
-sub   = "TCP transport"
+sub   = "gateway IDS · syslog-ng over TCP"
+[[flows.sources]]
+label = "Traefik + CrowdSec"
+sub   = "access log · decisions"
 [[flows.nodes]]
 label = "Logstash"
-sub   = "GeoIP enrichment"
+sub   = "pipeline per source · GeoIP"
 [[flows.nodes]]
 label = "Elasticsearch"
-sub   = "scoped ingest"
+sub   = "scoped ingest · retention"
 [[flows.nodes]]
-label = "Kibana"
-sub   = "dashboards"
+label = "Kibana / Grafana"
+sub   = "dashboards · alerting"

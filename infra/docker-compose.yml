@@ -7,7 +7,9 @@
 
 services:
   resume:
-    image: nginx:stable-alpine
+    # Pinned 2026-10-13: stable-alpine only moves when someone re-pulls, and
+    # this host had sat on 1.30.3 (CVE-2026-42533 et al., fixed 1.30.4+).
+    image: nginx:1.30.5-alpine
     container_name: resume
     restart: unless-stopped
     read_only: true
